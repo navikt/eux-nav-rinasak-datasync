@@ -1,0 +1,5 @@
+name: eux-nav-rinasak-datasync
+ingress: https://eux-nav-rinasak-datasync.intern.nav.no
+database:
+  name: eux-nav-rinasak-db
+  tier: db-custom-1-3840

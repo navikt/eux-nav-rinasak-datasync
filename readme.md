@@ -1,9 +1,9 @@
-### EUX NAV Rinasak
+### EUX NAV Rinasak Datasync
 
 Overføring av data fra `eux-case-store` til `eux-nav-rinasak`
 
-
 ## Brukte teknologier
+
 * Kotlin
 * Spring
 * Maven

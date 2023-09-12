@@ -7,12 +7,20 @@
     <parent>
         <groupId>no.nav.eux</groupId>
         <artifactId>parent-pom</artifactId>
-        <version>0.0.7</version>
+        <version>1.0.1</version>
     </parent>
 
     <artifactId>eux-nav-rinasak-datasync</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+    <modules>
+        <module>eux-nav-rinasak-datasync-model</module>
+        <module>eux-nav-rinasak-datasync-integration</module>
+        <module>eux-nav-rinasak-datasync-persistence</module>
+        <module>eux-nav-rinasak-datasync-service</module>
+        <module>eux-nav-rinasak-datasync-webapp</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -21,9 +29,9 @@
     </properties>
 
     <scm>
-        <connection>scm:git:https://github.com/navikt/eux-nav-rinasak.git</connection>
-        <developerConnection>scm:git:https://github.com/navikt/eux-nav-rinasak.git</developerConnection>
-        <url>https://github.com/navikt/eux-nav-rinasak.git</url>
+        <connection>scm:git:https://github.com/navikt/eux-nav-rinasak-datasync.git</connection>
+        <developerConnection>scm:git:https://github.com/navikt/eux-nav-rinasak-datasync.git</developerConnection>
+        <url>https://github.com/navikt/eux-nav-rinasak-datasync.git</url>
     </scm>
 
 </project>

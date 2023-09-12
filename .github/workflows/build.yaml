@@ -1,0 +1,134 @@
+name: build
+run-name: Build - ${{ github.event.head_commit.message }}
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+env:
+  APP_NAME: eux-nav-rinasak-datasync
+  IMAGE: ghcr.io/${{ github.repository }}/eux-nav-rinasak-datasync
+  DATABASE_HOST: localhost
+  DATABASE_PORT: 5432
+  DATABASE_DATABASE: postgres
+  DATABASE_USERNAME: postgres
+  DATABASE_PASSWORD: postgres
+  READER_TOKEN: ${{ secrets.READER_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Maven
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+            ${{ runner.os }}-maven-
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          overwrite-settings: false
+
+      - name: Build and test
+        run: >
+          mvn clean install
+          --settings ./.github/settings.xml
+          --no-transfer-progress -B
+
+      - name: Set Image Name
+        run: >
+          echo "DOCKER_IMAGE=${IMAGE}:${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Build docker image
+        run: >
+          docker build -t ${IMAGE}:${{ github.sha }} .
+
+      - name: Login to Github Package Registry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          docker login ghcr.io -u ${GITHUB_REPOSITORY} -p ${GITHUB_TOKEN}
+
+      - name: Push Docker image
+        run: >
+          docker push ${IMAGE}:${{ github.sha }}
+
+    outputs:
+      docker-image: >
+        ${{ env.IMAGE }}:${{ github.sha }}
+
+  dry-run-q2:
+    name: 'Dry run to NAIS - Q2'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: 'Calling deploy action (eessibasis namespace)'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          DRY_RUN: true
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais.yaml
+          VAR: image=${{ needs.build.outputs.docker-image }}
+          VARS: .nais/q2.yaml
+          PRINT_PAYLOAD: true
+
+  dry-run-q1:
+    name: 'Dry run to NAIS - Q1'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: 'Calling deploy action (eessibasis namespace)'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          DRY_RUN: true
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/nais.yaml
+          VAR: image=${{ needs.build.outputs.docker-image }}
+          VARS: .nais/q1.yaml
+          PRINT_PAYLOAD: true
+
+  dry-run-prod:
+    name: 'Dry run to NAIS - Production'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+      - name: 'Calling deploy action (eessibasis namespace)'
+        uses: nais/deploy/actions/deploy@v1
+        env:
+          DRY_RUN: true
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais.yaml
+          VAR: image=${{ needs.build.outputs.docker-image }}
+          VARS: .nais/prod.yaml
+          PRINT_PAYLOAD: true

@@ -1,6 +1,11 @@
 name: release
 run-name: Release - ${{ github.event.head_commit.message }}
 
+permissions:
+  deployments: write
+  packages: write
+  contents: write
+
 on:
   push:
     branches: [ main ]

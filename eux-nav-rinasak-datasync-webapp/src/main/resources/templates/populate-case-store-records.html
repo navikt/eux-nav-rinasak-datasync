@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Number Display</title>
+</head>
+<body>
+<h1>Number Display</h1>
+<form method="post">
+    <input type="number" name="inputNumber" th:value="${number}" />
+    <button type="submit">Update Number</button>
+</form>
+<p th:text="${number}"></p>
+</body>
+</html>

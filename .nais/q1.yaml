@@ -1,5 +1,5 @@
 name: eux-nav-rinasak-datasync-q1
-ingress: https://eux-nav-rinasak-q1.intern.dev.nav.no
+ingress: https://eux-nav-rinasak-datasync-q1.intern.dev.nav.no
 database:
-  name: eux-nav-rinasak-db-q1
+  name: eux-nav-rinasak-datasync-db-q1
   tier: db-f1-micro

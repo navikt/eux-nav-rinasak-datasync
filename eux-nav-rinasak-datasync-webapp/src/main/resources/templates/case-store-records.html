@@ -9,16 +9,24 @@
 <table class="container">
     <thead>
     <tr>
+        <th>id</th>
         <th>Rina id</th>
+        <th>bucId</th>
         <th>Fagsak nr</th>
         <th>Fagsak tema</th>
+        <th>caseFileId</th>
+        <th>enhetId</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="caseStoreRecord:${caseStoreRecords}">
+        <td th:text="${caseStoreRecord.id}"></td>
         <td th:text="${caseStoreRecord.rinaId}"></td>
+        <td th:text="${caseStoreRecord.bucId}"></td>
         <td th:text="${caseStoreRecord.navId}"></td>
         <td th:text="${caseStoreRecord.theme}"></td>
+        <td th:text="${caseStoreRecord.caseFileId}"></td>
+        <td th:text="${caseStoreRecord.enhetId}"></td>
     </tr>
     </tbody>
 </table>

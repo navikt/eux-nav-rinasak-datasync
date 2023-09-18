@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate
 
 @Component
 class EuxCaseStoreClient(
-    @Value("endpoint.eux.casestore")
+    @Value("\${endpoint.eux.casestore}")
     val euxCaseStoreUrl: String,
     val euxCaseStoreRestTemplate: RestTemplate
 ) {

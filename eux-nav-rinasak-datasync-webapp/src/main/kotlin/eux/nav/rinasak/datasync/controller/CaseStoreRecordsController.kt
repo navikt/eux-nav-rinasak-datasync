@@ -22,7 +22,6 @@ class CaseStoreRecordsController(
         "case-store-records-error"
     }
 
-
     fun Model.caseStoreRecords() =
         addAttribute(
             "caseStoreRecords",

@@ -56,3 +56,9 @@ spec:
     sidecar:
       enabled: true
       autoLogin: true
+  accessPolicy:
+    outbound:
+      external:
+        - host: eux-case-store-q1.dev-fss-pub.nais.io
+        - host: eux-case-store-q2.dev-fss-pub.nais.io
+        - host: eux-case-store.prod-fss-pub.nais.io

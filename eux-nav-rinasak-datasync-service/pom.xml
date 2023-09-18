@@ -32,6 +32,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.eux</groupId>
+            <artifactId>eux-nav-rinasak-datasync-integration</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.eux</groupId>
             <artifactId>eux-nav-rinasak-datasync-model</artifactId>
             <version>${project.version}</version>
         </dependency>

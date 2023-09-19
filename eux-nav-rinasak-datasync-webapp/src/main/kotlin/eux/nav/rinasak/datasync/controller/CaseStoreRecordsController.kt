@@ -3,7 +3,7 @@ package eux.nav.rinasak.datasync.controller
 import eux.nav.rinasak.datasync.service.CaseStoreRecordsService
 import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.slf4j.LoggerFactory.getLogger
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping
 class CaseStoreRecordsController(
     val caseStoreRecordsService: CaseStoreRecordsService
 ) {
-    private val log: Logger = LoggerFactory.getLogger(CaseStoreRecordsController::class.java)
+    val log: Logger = getLogger(CaseStoreRecordsController::class.java)
 
     @GetMapping("/case-store-records")
     fun stations(
@@ -32,5 +32,4 @@ class CaseStoreRecordsController(
             "caseStoreRecords",
             caseStoreRecordsService.cases()
         )
-
 }

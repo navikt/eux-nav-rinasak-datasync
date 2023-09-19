@@ -9,24 +9,30 @@
 <table class="container">
     <thead>
     <tr>
-        <th>id</th>
-        <th>Rina id</th>
+        <th>caseStoreRecordUuid</th>
+        <th>rinasakId</th>
+        <th>fagsakNr</th>
+        <th>fagsakTema</th>
+        <th>overstyrtEnhetsnummer</th>
+        <th>journalpostId</th>
         <th>bucId</th>
-        <th>Fagsak nr</th>
-        <th>Fagsak tema</th>
-        <th>caseFileId</th>
-        <th>enhetId</th>
+        <th>opprettetBruker</th>
+        <th>opprettetDato</th>
+        <th>syncStatus</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="caseStoreRecord:${caseStoreRecords}">
-        <td th:text="${caseStoreRecord.id}"></td>
-        <td th:text="${caseStoreRecord.rinaId}"></td>
+        <td th:text="${caseStoreRecord.caseStoreRecordUuid}"></td>
+        <td th:text="${caseStoreRecord.rinasakId}"></td>
+        <td th:text="${caseStoreRecord.fagsakNr}"></td>
+        <td th:text="${caseStoreRecord.fagsakTema}"></td>
+        <td th:text="${caseStoreRecord.overstyrtEnhetsnummer}"></td>
+        <td th:text="${caseStoreRecord.journalpostId}"></td>
         <td th:text="${caseStoreRecord.bucId}"></td>
-        <td th:text="${caseStoreRecord.navId}"></td>
-        <td th:text="${caseStoreRecord.theme}"></td>
-        <td th:text="${caseStoreRecord.caseFileId}"></td>
-        <td th:text="${caseStoreRecord.enhetId}"></td>
+        <td th:text="${caseStoreRecord.opprettetBruker}"></td>
+        <td th:text="${caseStoreRecord.opprettetDato}"></td>
+        <td th:text="${caseStoreRecord.syncStatus}"></td>
     </tr>
     </tbody>
 </table>

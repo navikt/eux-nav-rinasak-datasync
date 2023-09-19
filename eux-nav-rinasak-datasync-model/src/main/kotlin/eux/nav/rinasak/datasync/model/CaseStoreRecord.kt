@@ -1,18 +1,26 @@
 package eux.nav.rinasak.datasync.model
 
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Id
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 import java.util.*
-import java.util.UUID.randomUUID
 
+@Entity
 data class CaseStoreRecord(
-    val caseStoreRecordUuid: UUID = randomUUID(),
-    val rinasakId: Int? = 0,
-    val fagsakNr: String? = "0",
-    val fagsakTema: String? = "ukjent",
-    val overstyrtEnhetsnummer: String? = "0",
-    val journalpostId: String? = "0",
-    val bucId: UUID? = null,
+    @Id
+    val caseStoreRecordUuid: UUID,
+    val caseStoreId: Long?,
+    val rinasakId: Int?,
+    val fagsakNr: String?,
+    val fagsakTema: String?,
+    val overstyrtEnhetsnummer: String?,
+    val journalpostId: String?,
+    val bucId: UUID?,
     val opprettetBruker: String? = "ukjent",
-    val opprettetDato: LocalDateTime? = now()
+    val opprettetDato: LocalDateTime? = now(),
+    @Enumerated(EnumType.STRING)
+    val syncStatus: SyncStatus
 )

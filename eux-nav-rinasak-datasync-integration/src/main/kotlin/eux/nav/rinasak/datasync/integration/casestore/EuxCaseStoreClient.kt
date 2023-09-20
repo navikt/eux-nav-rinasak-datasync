@@ -16,9 +16,9 @@ class EuxCaseStoreClient(
 
     fun cases() =
         euxCaseStoreRestTemplate
-            .also { println("${euxCaseStoreUrl}/cases?rinaId=1444329") }
+            .also { println("${euxCaseStoreUrl}/cases/next") }
             .exchange(
-                "${euxCaseStoreUrl}/cases?rinaId=1444329",
+                "${euxCaseStoreUrl}/cases/next",
                 HttpMethod.GET, null, object : ParameterizedTypeReference<List<EuxCaseStoreCase>>() {}
             )
             .body

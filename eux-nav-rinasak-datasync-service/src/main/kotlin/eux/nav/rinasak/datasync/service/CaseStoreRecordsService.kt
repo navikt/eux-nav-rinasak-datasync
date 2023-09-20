@@ -34,8 +34,35 @@ class CaseStoreRecordsService(
 
     fun populateNext() = euxCaseStoreClient
         .nextCases()
+        .map { euxCaseStoreClient.save(it) }
         .map { it.toCaseStoreRecord() }
         .also { log.info("next size: ${it.size}") }
         .map { repository.save(it) }
         .size
+
+    fun populateNavRinasakStaging(): Int {
+        val caseStoreRecordsByRinasak = repository
+            .findAll()
+            .groupBy { it.rinasakId }
+        val caseStoreRecordsWithOneEntry = caseStoreRecordsByRinasak
+            .filter { it.value.size == 1 }
+            .also { log.info("${it.size} rina cases in case store with 1 record") }
+            .mapValues { it.value.first() }
+        val caseStoreRecordsWithOneEntryMissingJournalpostId = caseStoreRecordsWithOneEntry
+            .filter { it.value.journalpostId.isNullOrEmpty() }
+            .also { log.info("${it.size} rina cases in case store with 1 record and no journalpostId") }
+        val caseStoreRecordsWithOneEntryAndJournalpostId = caseStoreRecordsWithOneEntry
+            .filter { it.value.journalpostId.isNullOrEmpty() }
+            .also { log.info("${it.size} rina cases in case store with 1 record and journalpostId") }
+        val caseStoreRecordsWithMoreThanOneEntry = caseStoreRecordsByRinasak
+            .filter { it.value.size > 1 }
+            .also { log.info("${it.size} rina cases in case store with more than 1 record") }
+        val caseStoreRecordsWithMoreThanOneEntryWithJournalpost = caseStoreRecordsWithMoreThanOneEntry
+            .filter { entry -> entry.value.any { !it.journalpostId.isNullOrEmpty() } }
+            .also { log.info("${it.size} rina cases in case store with more than 1 record and journalpost") }
+        val caseStoreRecordsWithMoreThanOneEntryMissingJournalpost = caseStoreRecordsWithMoreThanOneEntry
+            .filter { entry -> entry.value.none { !it.journalpostId.isNullOrEmpty() } }
+            .also { log.info("${it.size} rina cases in case store with more than 1 record and no journalpost") }
+        return caseStoreRecordsByRinasak.size
+    }
 }

@@ -17,9 +17,7 @@ class CaseStoreRecordsService(
 ) {
     val log: Logger = LoggerFactory.getLogger(CaseStoreRecordsService::class.java)
 
-    fun cases() = euxCaseStoreClient
-        .nextCases()
-        .map { it.toCaseStoreRecord() }
+    fun cases(): List<CaseStoreRecord> = repository.findAll()
 
     fun EuxCaseStoreCase.toCaseStoreRecord() =
         CaseStoreRecord(
@@ -35,9 +33,9 @@ class CaseStoreRecordsService(
         )
 
     fun populateNext() = euxCaseStoreClient
-            .nextCases()
-            .map { it.toCaseStoreRecord() }
-            .also { log.info("next size: ${it.size}") }
-            .map { repository.save(it) }
-            .size
+        .nextCases()
+        .map { it.toCaseStoreRecord() }
+        .also { log.info("next size: ${it.size}") }
+        .map { repository.save(it) }
+        .size
 }

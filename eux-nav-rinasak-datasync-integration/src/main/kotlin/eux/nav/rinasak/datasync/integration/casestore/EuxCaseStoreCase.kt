@@ -10,4 +10,5 @@ data class EuxCaseStoreCase (
     val theme: String? = null,
     val caseFileId: String? = null,
     val enhetId: String? = null,
+    val syncStatus: String? = null,
 )

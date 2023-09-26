@@ -45,7 +45,7 @@ class CaseStoreRecordsService(
 
     fun populateNext() = euxCaseStoreClient
         .nextCases()
-        .map { euxCaseStoreClient.save(it) }
+        .map { euxCaseStoreClient.save(it.copy(syncStatus = "SYNCED")) }
         .map { it.toCaseStoreRecord() }
         .also { log.info("next size: ${it.size}") }
         .map { repository.save(it) }

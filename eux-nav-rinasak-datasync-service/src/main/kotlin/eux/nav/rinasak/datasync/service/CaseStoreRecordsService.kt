@@ -63,7 +63,7 @@ class CaseStoreRecordsService(
             .filter { it.value.journalpostId.isNullOrEmpty() }
             .also { log.info("${it.size} rina cases in case store with 1 record and no journalpostId") }
         val caseStoreRecordsWithOneEntryAndJournalpostId = caseStoreRecordsWithOneEntry
-            .filter { it.value.journalpostId.isNullOrEmpty() }
+            .filter { !it.value.journalpostId.isNullOrEmpty() }
             .also { log.info("${it.size} rina cases in case store with 1 record and journalpostId") }
         val caseStoreRecordsWithMoreThanOneEntry = caseStoreRecordsByRinasak
             .filter { it.value.size > 1 }

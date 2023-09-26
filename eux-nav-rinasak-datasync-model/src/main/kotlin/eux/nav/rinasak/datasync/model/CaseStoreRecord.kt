@@ -13,7 +13,7 @@ data class CaseStoreRecord(
     @Id
     val caseStoreRecordUuid: UUID,
     val caseStoreId: Long?,
-    val rinasakId: Int?,
+    val rinasakId: Int,
     val fagsakNr: String?,
     val fagsakTema: String?,
     val overstyrtEnhetsnummer: String?,

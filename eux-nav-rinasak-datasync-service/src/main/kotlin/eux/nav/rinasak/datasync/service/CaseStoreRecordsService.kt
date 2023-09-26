@@ -23,7 +23,7 @@ class CaseStoreRecordsService(
         CaseStoreRecord(
             caseStoreRecordUuid = UUID.randomUUID(),
             caseStoreId = id,
-            rinasakId = rinaId?.toInt(),
+            rinasakId = rinaId?.toInt() ?: 0,
             fagsakNr = navId,
             fagsakTema = theme,
             overstyrtEnhetsnummer = enhetId,
@@ -34,7 +34,7 @@ class CaseStoreRecordsService(
 
     fun populateAll(): Int {
         val next = populateNext()
-        return if (next > 0){
+        return if (next > 0) {
             log.info("Fant $next records i case store...")
             populateAll() + next
         } else {
@@ -55,25 +55,55 @@ class CaseStoreRecordsService(
         val caseStoreRecordsByRinasak = repository
             .findAll()
             .groupBy { it.rinasakId }
-        val caseStoreRecordsWithOneEntry = caseStoreRecordsByRinasak
+        val caseStoreRecordsWithOneEntry = caseStoreRecordsWithOneEntry(caseStoreRecordsByRinasak)
+        val caseStoreRecordsWithMoreThanOneEntry = caseStoreRecordsWithMoreThanOneEntry(caseStoreRecordsByRinasak)
+        stageCaseStoreRecordsWithOneEntryMissingJournalpostId(caseStoreRecordsWithOneEntry)
+        stageCaseStoreRecordsWithOneEntryAndJournalpostId(caseStoreRecordsWithOneEntry)
+        stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(caseStoreRecordsWithMoreThanOneEntry)
+        stageCaseStoreRecordsWithMoreThanOneEntryMissingJournalpost(caseStoreRecordsWithMoreThanOneEntry)
+        return caseStoreRecordsByRinasak.size
+    }
+
+    private fun caseStoreRecordsWithMoreThanOneEntry(
+        caseStoreRecordsByRinasak: Map<Int, List<CaseStoreRecord>>
+    ) =
+        caseStoreRecordsByRinasak
+            .filter { it.value.size > 1 }
+            .also { log.info("${it.size} rina cases in case store with more than 1 record") }
+
+    private fun caseStoreRecordsWithOneEntry(
+        caseStoreRecordsByRinasak: Map<Int, List<CaseStoreRecord>>
+    ) =
+        caseStoreRecordsByRinasak
             .filter { it.value.size == 1 }
             .also { log.info("${it.size} rina cases in case store with 1 record") }
             .mapValues { it.value.first() }
-        val caseStoreRecordsWithOneEntryMissingJournalpostId = caseStoreRecordsWithOneEntry
+
+    fun stageCaseStoreRecordsWithOneEntryMissingJournalpostId(
+        caseStoreRecordsWithOneEntry: Map<Int, CaseStoreRecord>
+    ) =
+        caseStoreRecordsWithOneEntry
             .filter { it.value.journalpostId.isNullOrEmpty() }
             .also { log.info("${it.size} rina cases in case store with 1 record and no journalpostId") }
-        val caseStoreRecordsWithOneEntryAndJournalpostId = caseStoreRecordsWithOneEntry
+
+    fun stageCaseStoreRecordsWithOneEntryAndJournalpostId(
+        caseStoreRecordsWithOneEntry: Map<Int, CaseStoreRecord>
+    ) =
+        caseStoreRecordsWithOneEntry
             .filter { !it.value.journalpostId.isNullOrEmpty() }
             .also { log.info("${it.size} rina cases in case store with 1 record and journalpostId") }
-        val caseStoreRecordsWithMoreThanOneEntry = caseStoreRecordsByRinasak
-            .filter { it.value.size > 1 }
-            .also { log.info("${it.size} rina cases in case store with more than 1 record") }
-        val caseStoreRecordsWithMoreThanOneEntryWithJournalpost = caseStoreRecordsWithMoreThanOneEntry
+
+    fun stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(
+        caseStoreRecordsWithMoreThanOneEntry: Map<Int, List<CaseStoreRecord>>
+    ) =
+        caseStoreRecordsWithMoreThanOneEntry
             .filter { entry -> entry.value.any { !it.journalpostId.isNullOrEmpty() } }
             .also { log.info("${it.size} rina cases in case store with more than 1 record and journalpost") }
-        val caseStoreRecordsWithMoreThanOneEntryMissingJournalpost = caseStoreRecordsWithMoreThanOneEntry
+
+    fun stageCaseStoreRecordsWithMoreThanOneEntryMissingJournalpost(
+        caseStoreRecordsWithMoreThanOneEntry: Map<Int, List<CaseStoreRecord>>
+    ) =
+        caseStoreRecordsWithMoreThanOneEntry
             .filter { entry -> entry.value.all { it.journalpostId.isNullOrEmpty() } }
             .also { log.info("${it.size} rina cases in case store with more than 1 record and no journalpost") }
-        return caseStoreRecordsByRinasak.size
-    }
 }

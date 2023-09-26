@@ -10,6 +10,7 @@
     <thead>
     <tr>
         <th>caseStoreRecordUuid</th>
+        <th>caseStoreId</th>
         <th>rinasakId</th>
         <th>fagsakNr</th>
         <th>fagsakTema</th>
@@ -24,6 +25,7 @@
     <tbody>
     <tr th:each="caseStoreRecord:${caseStoreRecords}">
         <td th:text="${caseStoreRecord.caseStoreRecordUuid}"></td>
+        <td th:text="${caseStoreRecord.caseStoreId}"></td>
         <td th:text="${caseStoreRecord.rinasakId}"></td>
         <td th:text="${caseStoreRecord.fagsakNr}"></td>
         <td th:text="${caseStoreRecord.fagsakTema}"></td>

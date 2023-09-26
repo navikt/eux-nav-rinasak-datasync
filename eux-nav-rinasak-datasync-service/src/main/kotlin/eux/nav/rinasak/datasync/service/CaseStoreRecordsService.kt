@@ -32,6 +32,17 @@ class CaseStoreRecordsService(
             syncStatus = PENDING
         )
 
+    fun populateAll(): Int {
+        val next = populateNext()
+        return if (next > 0){
+            log.info("Fant $next records i case store...")
+            populateAll() + next
+        } else {
+            log.info("Fant ikke flere records i case store")
+            0
+        }
+    }
+
     fun populateNext() = euxCaseStoreClient
         .nextCases()
         .map { euxCaseStoreClient.save(it) }

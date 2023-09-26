@@ -15,7 +15,7 @@ class PopulateNavRinasakController(
 ) {
 
     @GetMapping("/populate-nav-rinasak")
-    fun stations(
+    fun populateNavRinasak(
         model: Model,
     ): String {
         model.addAttribute("number", 0)

@@ -10,25 +10,25 @@ import org.springframework.web.bind.annotation.RequestParam
 
 @Unprotected
 @Controller
-class PopulateCaseStoreRecordsController(
+class PopulateAllCaseStoreRecordsController(
     val caseStoreRecordsService: CaseStoreRecordsService
 ) {
 
-    @GetMapping("/populate-case-store-records")
-    fun populateCaseStoreRecords(
+    @GetMapping("/populate-all-case-store-records")
+    fun populateAllCaseStoreRecords(
         model: Model,
     ): String {
         model.addAttribute("number", 0)
         return "populate-case-store-records"
     }
 
-    @PostMapping("/populate-case-store-records")
-    fun populateCaseStoreRecords(
+    @PostMapping("/populate-all-case-store-records")
+    fun populateALlCaseStoreRecords(
         @RequestParam("inputNumber") inputNumber: Int?,
         model: Model
     ): String {
-        val numberOfFetchedRecords = caseStoreRecordsService.populateNext()
+        val numberOfFetchedRecords = caseStoreRecordsService.populateAll()
         model.addAttribute("numberOfFetchedRecords", numberOfFetchedRecords)
-        return "populate-case-store-records"
+        return "populate-all-case-store-records"
     }
 }

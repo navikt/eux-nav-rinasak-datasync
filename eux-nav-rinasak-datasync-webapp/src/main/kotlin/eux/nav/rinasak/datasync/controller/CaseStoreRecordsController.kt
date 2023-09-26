@@ -16,7 +16,7 @@ class CaseStoreRecordsController(
     val log: Logger = getLogger(CaseStoreRecordsController::class.java)
 
     @GetMapping("/case-store-records")
-    fun stations(
+    fun caseStoreRecords(
         model: Model,
     ) = try {
         model.caseStoreRecords()

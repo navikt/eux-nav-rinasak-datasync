@@ -33,4 +33,11 @@ class EuxCaseStoreClient(
                 GET, null, object : ParameterizedTypeReference<List<EuxCaseStoreCase>>() {}
             )
             .body!!
+
+    fun resetSyncStatus() {
+        val entity: ResponseEntity<Void> = euxCaseStoreRestTemplate
+            .postForEntity("${euxCaseStoreUrl}/cases/resetsyncstatus", Void::class.java)
+        if (!entity.statusCode.is2xxSuccessful)
+            throw RuntimeException("Kunne ikke resette sync status")
+    }
 }

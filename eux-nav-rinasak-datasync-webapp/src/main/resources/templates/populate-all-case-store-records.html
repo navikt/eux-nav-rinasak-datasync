@@ -1,10 +1,65 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Populate All Case Store Records</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>Menu</h1>
+    <ul>
+        <li><a href="/case-store-records">case-store-records</a></li>
+        <li><a href="/populate-all-case-store-records">populate-all-case-store-records</a></li>
+        <li><a href="/populate-case-store-records">populate-case-store-records</a></li>
+        <li><a href="/populate-nav-rinasak">populate-nav-rinasak</a></li>
+        <li><a href="/reset-case-store-sync-status">reset-case-store-sync-status</a></li>
+        <li><a href="/reset-nav-rinasak">reset-nav-rinasak</a></li>
+        <li><a href="/stats">stats</a></li>
+    </ul>
+</div>
 <h1>Populate All Case Store Records</h1>
 <form method="post">
     <button type="submit">Populate All</button>

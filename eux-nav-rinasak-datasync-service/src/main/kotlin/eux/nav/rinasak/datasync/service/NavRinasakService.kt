@@ -22,7 +22,7 @@ class NavRinasakService(
 
     fun save(navRinasak: NavRinasak) {
         val existingNavRinasak = navRinasakRepository.findByIdOrNull(navRinasak.navRinasakUuid)
-        if (existingNavRinasak != null) {
+        if (existingNavRinasak == null) {
             log.info("saving nav rinasak: ${navRinasak.rinasakId} : ${navRinasak.navRinasakUuid}")
             navRinasakRepository.save(navRinasak)
         } else {
@@ -32,7 +32,7 @@ class NavRinasakService(
 
     fun save(initiellFagsak: InitiellFagsak) {
         val existingInitiellFagsak = initiellFagsakRepository.findByIdOrNull(initiellFagsak.navRinasakUuid)
-        if (existingInitiellFagsak != null) {
+        if (existingInitiellFagsak == null) {
             log.info("legger til initiell fagsak ${initiellFagsak.id} på: ${initiellFagsak.navRinasakUuid}")
             initiellFagsakRepository.save(initiellFagsak)
         } else {

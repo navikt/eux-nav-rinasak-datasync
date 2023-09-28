@@ -29,7 +29,7 @@ class CaseStoreRecordsService(
         CaseStoreRecord(
             caseStoreRecordUuid = UUID.randomUUID(),
             caseStoreId = id,
-            rinasakId = rinaId?.toInt() ?: 0,
+            rinasakId = if (rinaId.isNullOrEmpty()) 0 else rinaId!!.toInt(),
             fagsakId = navId,
             fagsakTema = theme,
             overstyrtEnhetsnummer = enhetId,

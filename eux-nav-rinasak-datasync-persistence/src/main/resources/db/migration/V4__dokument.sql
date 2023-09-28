@@ -6,6 +6,7 @@ CREATE TABLE dokument
     sed_type         varchar(100),
     nav_rinasak_uuid uuid references nav_rinasak (nav_rinasak_uuid),
     dokument_info_id varchar(100),
+    sync_status      varchar(32),
     opprettet_bruker varchar(100),
     opprettet_dato   timestamp
 );

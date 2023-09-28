@@ -19,6 +19,7 @@ class CaseStoreRecordsService(
     val repository: CaseStoreRecordRepository,
     val navRinasakService: NavRinasakService,
     val safSakClient: SafSakClient,
+    val dokumentInfoIdService: DokumentInfoIdService
 ) {
     val log: Logger = LoggerFactory.getLogger(CaseStoreRecordsService::class.java)
 
@@ -60,12 +61,16 @@ class CaseStoreRecordsService(
         val caseStoreRecordsByRinasak = repository
             .findAll()
             .groupBy { it.rinasakId }
-        val caseStoreRecordsWithOneEntry = caseStoreRecordsWithOneEntry(caseStoreRecordsByRinasak)
-        val caseStoreRecordsWithMoreThanOneEntry = caseStoreRecordsWithMoreThanOneEntry(caseStoreRecordsByRinasak)
-        stageCaseStoreRecordsWithOneEntryMissingJournalpostId(caseStoreRecordsWithOneEntry)
-        stageCaseStoreRecordsWithOneEntryAndJournalpostId(caseStoreRecordsWithOneEntry)
-        stageCaseStoreRecordsWithMoreThanOneEntryMissingJournalpost(caseStoreRecordsWithMoreThanOneEntry)
-        stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(caseStoreRecordsWithMoreThanOneEntry)
+        caseStoreRecordsWithOneEntry(caseStoreRecordsByRinasak)
+            .also {
+                stageCaseStoreRecordsWithOneEntryMissingJournalpostId(it)
+                stageCaseStoreRecordsWithOneEntryAndJournalpostId(it)
+            }
+        caseStoreRecordsWithMoreThanOneEntry(caseStoreRecordsByRinasak)
+            .also {
+                stageCaseStoreRecordsWithMoreThanOneEntryMissingJournalpost(it)
+                stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(it)
+            }
         return caseStoreRecordsByRinasak.size
     }
 
@@ -96,8 +101,9 @@ class CaseStoreRecordsService(
         caseStoreRecordsWithOneEntry: Map<Int, CaseStoreRecord>
     ) =
         caseStoreRecordsWithOneEntry
-            .filter { !it.value.journalpostId.isNullOrEmpty() }
+            .filterNot { it.value.journalpostId.isNullOrEmpty() }
             .also { log.info("${it.size} rina cases in case store with 1 record and journalpostId") }
+            .forEach { stageCaseStoreRecordWithOneEntryAndJournalpostId(it.key, it.value) }
 
     fun stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(
         caseStoreRecordsWithMoreThanOneEntry: Map<Int, List<CaseStoreRecord>>
@@ -105,6 +111,7 @@ class CaseStoreRecordsService(
         caseStoreRecordsWithMoreThanOneEntry
             .filter { entry -> entry.value.any { !it.journalpostId.isNullOrEmpty() } }
             .also { log.info("${it.size} rina cases in case store with more than 1 record and journalpost") }
+            .forEach { stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(it.key, it.value) }
 
     fun stageCaseStoreRecordsWithMoreThanOneEntryMissingJournalpost(
         caseStoreRecordsWithMoreThanOneEntry: Map<Int, List<CaseStoreRecord>>
@@ -152,4 +159,30 @@ class CaseStoreRecordsService(
         navRinasakService.save(initiellFagsak)
     }
 
+    fun stageCaseStoreRecordWithOneEntryAndJournalpostId(
+        rinasakId: Int,
+        record: CaseStoreRecord
+    ) {
+        val journalpostId = record.journalpostId
+            ?: throw RuntimeException("kodefeil relatert til rinasakid: $rinasakId, mangler journalpostId")
+        val navRinasak = NavRinasak(rinasakId = rinasakId)
+        val dokument = dokumentInfoIdService.dokument(
+            journalpostId = journalpostId,
+            navRinasakUuid = navRinasak.navRinasakUuid
+        )
+        navRinasakService.save(navRinasak)
+        navRinasakService.save(dokument)
+    }
+
+    fun stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(
+        rinasakId: Int,
+        records: List<CaseStoreRecord>
+    ) {
+        val navRinasak = NavRinasak(rinasakId = rinasakId)
+        navRinasakService.save(navRinasak)
+        records
+            .mapNotNull { it.journalpostId }
+            .map { dokumentInfoIdService.dokument(it, navRinasak.navRinasakUuid) }
+            .forEach { navRinasakService.save(it) }
+    }
 }

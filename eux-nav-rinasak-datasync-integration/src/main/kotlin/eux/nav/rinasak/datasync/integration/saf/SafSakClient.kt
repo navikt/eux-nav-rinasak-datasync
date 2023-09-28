@@ -9,4 +9,9 @@ class SafSakClient {
         SafSak(
             fagsakId = fagsakId,
         )
+
+    fun safJournalpost(journalpostId: String) =
+        SafJournalpost(
+            journalpostId = journalpostId
+        )
 }

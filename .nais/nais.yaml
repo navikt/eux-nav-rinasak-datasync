@@ -62,3 +62,7 @@ spec:
         - host: eux-case-store-q1.dev-fss-pub.nais.io
         - host: eux-case-store-q2.dev-fss-pub.nais.io
         - host: eux-case-store.prod-fss-pub.nais.io
+      rules:
+        - application: eux-nav-rinasak-q1
+        - application: eux-nav-rinasak-q2
+        - application: eux-nav-rinasak

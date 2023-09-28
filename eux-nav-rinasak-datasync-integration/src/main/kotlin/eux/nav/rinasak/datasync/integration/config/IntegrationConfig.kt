@@ -21,10 +21,24 @@ class IntegrationConfig {
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,
         oAuth2AccessTokenService: OAuth2AccessTokenService
-    ): RestTemplate? {
+    ): RestTemplate {
         val clientProperties: ClientProperties = clientConfigurationProperties
             .registration["eux-case-store-credentials"]
             ?: throw RuntimeException("could not find oauth2 client config for eux-case-store-credentials")
+        return restTemplateBuilder
+            .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
+            .build()
+    }
+
+    @Bean
+    fun euxNavRinasakRestTemplate(
+        restTemplateBuilder: RestTemplateBuilder,
+        clientConfigurationProperties: ClientConfigurationProperties,
+        oAuth2AccessTokenService: OAuth2AccessTokenService
+    ): RestTemplate {
+        val clientProperties: ClientProperties = clientConfigurationProperties
+            .registration["eux-nav-rinasak-credentials"]
+            ?: throw RuntimeException("could not find oauth2 client config for eux-nav-rinasak-credentials")
         return restTemplateBuilder
             .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
             .build()

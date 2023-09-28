@@ -8,12 +8,11 @@ import jakarta.persistence.Id
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 import java.util.*
-import java.util.UUID.randomUUID
 
 @Entity
 data class InitiellFagsak(
     @Id
-    val navRinasakUuid: UUID = randomUUID(),
+    val navRinasakUuid: UUID,
     val id: String?,
     val tema: String?,
     val system: String?,

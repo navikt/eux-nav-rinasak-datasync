@@ -149,6 +149,7 @@ class CaseStoreRecordsService(
         val navRinasak = NavRinasak(rinasakId = rinasakId)
         val safSak = safSakClient.safSak(fagsakId)
         val initiellFagsak = InitiellFagsak(
+            navRinasakUuid = navRinasak.navRinasakUuid,
             id = fagsakId,
             tema = safSak.tema,
             system = safSak.fagsaksystem,

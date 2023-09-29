@@ -17,7 +17,7 @@ class ResetCaseStoreSyncStatusController(
     fun resetCaseStoreSyncStatus(
         model: Model,
     ): String {
-        return "populate-case-store-records"
+        return "reset-case-store-sync-status"
     }
 
     @PostMapping("/reset-case-store-sync-status")

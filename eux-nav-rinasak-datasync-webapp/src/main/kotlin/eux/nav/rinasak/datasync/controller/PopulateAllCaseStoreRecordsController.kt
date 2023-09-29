@@ -19,7 +19,7 @@ class PopulateAllCaseStoreRecordsController(
         model: Model,
     ): String {
         model.addAttribute("number", 0)
-        return "populate-case-store-records"
+        return "populate-all-case-store-records"
     }
 
     @PostMapping("/populate-all-case-store-records")

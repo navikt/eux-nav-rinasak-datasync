@@ -1,10 +1,10 @@
 package eux.nav.rinasak.datasync.service
 
 import eux.nav.rinasak.datasync.model.Dokument
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.util.*
 
-@Component
+@Service
 class DokumentInfoIdService {
 
     fun dokument(

@@ -9,9 +9,9 @@ import eux.nav.rinasak.datasync.persistence.NavRinasakRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
+@Service
 class NavRinasakService(
     val navRinasakRepository: NavRinasakRepository,
     val dokumentRepository: DokumentRepository,

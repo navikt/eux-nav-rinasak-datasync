@@ -44,6 +44,20 @@ class IntegrationConfig {
             .build()
     }
 
+    @Bean
+    fun safRestTemplate(
+        restTemplateBuilder: RestTemplateBuilder,
+        clientConfigurationProperties: ClientConfigurationProperties,
+        oAuth2AccessTokenService: OAuth2AccessTokenService
+    ): RestTemplate {
+        val clientProperties: ClientProperties = clientConfigurationProperties
+            .registration["saf-credentials"]
+            ?: throw RuntimeException("could not find oauth2 client config for saf-credentials")
+        return restTemplateBuilder
+            .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
+            .build()
+    }
+
     private fun bearerTokenInterceptor(
         clientProperties: ClientProperties,
         oAuth2AccessTokenService: OAuth2AccessTokenService

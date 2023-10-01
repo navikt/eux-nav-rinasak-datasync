@@ -17,16 +17,26 @@ class DokumentInfoIdService(
         journalpostId: String,
         navRinasakUuid: UUID
     ): Dokument {
-        val journalpost = safSakClient.safJournalpost(journalpostId)
-        val sedId = tilSedId(journalpost.eksternReferanseId)
-        val safDokument = journalpost.dokumenter.firstOrNull()
+        try {
+            val journalpost = safSakClient.safJournalpost(journalpostId)
+            val sedId = tilSedId(journalpost.eksternReferanseId)
+            val safDokument = journalpost.dokumenter.firstOrNull()
+            return Dokument(
+                navRinasakUuid = navRinasakUuid,
+                dokumentInfoId = safDokument?.dokumentInfoId ?: "mangler",
+                sedId = sedId,
+                sedType = "tbd",
+            )
+        } catch (e: RuntimeException) {
+            log.error("Feilet i uthenting av navRinasakUuid $navRinasakUuid, journalpostId: $journalpostId", e)
+            return Dokument(
+                navRinasakUuid = navRinasakUuid,
+                dokumentInfoId = "mangler",
+                sedId = "mangler",
+                sedType = "tbd",
+            )
+        }
 
-        return Dokument(
-            navRinasakUuid = navRinasakUuid,
-            dokumentInfoId = safDokument?.dokumentInfoId ?: "mangler",
-            sedId = sedId,
-            sedType = "tbd",
-        )
     }
 
     private fun tilSedId(eksternReferanseId: String): String {

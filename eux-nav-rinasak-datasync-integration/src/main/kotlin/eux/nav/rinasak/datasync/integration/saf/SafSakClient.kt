@@ -49,7 +49,7 @@ class SafSakClient(
 
     fun query(journalpostId: String) = GraphQlQuery(
         """query {
-              journalpost(journalpostId: $journalpostId) {
+              journalpost(journalpostId: "$journalpostId") {
                 journalposter {
                   journalpostId
                   tittel

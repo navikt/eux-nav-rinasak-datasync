@@ -34,6 +34,9 @@ class SafClient(
             .accept(APPLICATION_JSON)
             .body<GraphQlQuery>(graphQlQuery)
         log.info("Henter SAF journalpost: $journalpostId")
+        val responseString = safRestTemplate
+            .exchange(request, String::class.java)
+        log.info("SAF String: $responseString")
         val response = safRestTemplate
             .exchange(request, SafJournalpostRoot::class.java)
         return if (response.statusCode.is2xxSuccessful) {
@@ -49,7 +52,7 @@ class SafClient(
 
     fun query(journalpostId: String) = GraphQlQuery(
         """query {
-              journ1alpost(journalpostId: "$journalpostId") {
+              journalpost(journalpostId: "$journalpostId") {
                 journalposter {
                   journalpostId
                   tittel

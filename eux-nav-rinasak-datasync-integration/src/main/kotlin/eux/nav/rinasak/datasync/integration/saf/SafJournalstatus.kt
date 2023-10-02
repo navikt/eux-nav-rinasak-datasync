@@ -6,11 +6,16 @@ enum class SafJournalstatus(
     val erJournalfoert: Boolean
 ) {
     JOURNALFOERT(true),
+    MOTTATT(true),
+    UNDER_ARBEID(true),
+    FEILREGISTRERT(true),
     FERDIGSTILT(true),
     EKSPEDERT(true),
     AVBRUTT(true),
     UTGAAR(true),
     UKJENT_BRUKER(true),
+    RESERVERT(true),
+    OPPLASTING_DOKUMENT(true),
 
     @JsonEnumDefaultValue
     UKJENT(false);

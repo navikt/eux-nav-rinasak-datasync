@@ -57,6 +57,7 @@ class SafClient(
                   tittel
                   journalposttype
                   journalstatus
+                  eksternReferanseId
                   tema
                   dokumenter {
                     dokumentInfoId

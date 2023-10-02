@@ -2,7 +2,7 @@ package eux.nav.rinasak.datasync.service
 
 import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreCase
 import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreClient
-import eux.nav.rinasak.datasync.integration.saf.SafSakClient
+import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
 import eux.nav.rinasak.datasync.model.InitiellFagsak
 import eux.nav.rinasak.datasync.model.NavRinasak
@@ -18,7 +18,7 @@ class CaseStoreRecordsService(
     val euxCaseStoreClient: EuxCaseStoreClient,
     val repository: CaseStoreRecordRepository,
     val navRinasakService: NavRinasakService,
-    val safSakClient: SafSakClient,
+    val safClient: SafClient,
     val dokumentInfoIdService: DokumentInfoIdService
 ) {
     val log: Logger = LoggerFactory.getLogger(CaseStoreRecordsService::class.java)
@@ -149,7 +149,7 @@ class CaseStoreRecordsService(
 
     fun stageCaseStoreRecordWithMissingJournalpostId(rinasakId: Int, fagsakId: String) {
         val navRinasak = NavRinasak(rinasakId = rinasakId)
-        val safSak = safSakClient.safSak(fagsakId)
+        val safSak = safClient.safSak(fagsakId)
         val initiellFagsak = InitiellFagsak(
             navRinasakUuid = navRinasak.navRinasakUuid,
             id = fagsakId,

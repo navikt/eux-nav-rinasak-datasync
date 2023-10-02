@@ -10,12 +10,12 @@ import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 
 @Component
-class SafSakClient(
+class SafClient(
     @Value("\${endpoint.eux.saf}")
     val safUrl: String,
     val safRestTemplate: RestTemplate
 ) {
-    val log: Logger = LoggerFactory.getLogger(SafSakClient::class.java)
+    val log: Logger = LoggerFactory.getLogger(SafClient::class.java)
 
     fun safSak(fagsakId: String) =
         SafSak(
@@ -49,7 +49,7 @@ class SafSakClient(
 
     fun query(journalpostId: String) = GraphQlQuery(
         """query {
-              journalpost(journalpostId: "$journalpostId") {
+              journ1alpost(journalpostId: "$journalpostId") {
                 journalposter {
                   journalpostId
                   tittel

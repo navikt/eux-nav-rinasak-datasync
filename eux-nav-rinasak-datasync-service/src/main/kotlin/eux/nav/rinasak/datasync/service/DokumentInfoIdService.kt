@@ -1,6 +1,6 @@
 package eux.nav.rinasak.datasync.service
 
-import eux.nav.rinasak.datasync.integration.saf.SafSakClient
+import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.model.Dokument
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -9,7 +9,7 @@ import java.util.*
 
 @Service
 class DokumentInfoIdService(
-    val safSakClient: SafSakClient
+    val safClient: SafClient
 ) {
     val log: Logger = LoggerFactory.getLogger(DokumentInfoIdService::class.java)
 
@@ -18,7 +18,7 @@ class DokumentInfoIdService(
         navRinasakUuid: UUID
     ): Dokument {
         try {
-            val journalpost = safSakClient.safJournalpost(journalpostId)
+            val journalpost = safClient.safJournalpost(journalpostId)
             val sedId = tilSedId(journalpost.eksternReferanseId)
             val safDokument = journalpost.dokumenter.firstOrNull()
             return Dokument(

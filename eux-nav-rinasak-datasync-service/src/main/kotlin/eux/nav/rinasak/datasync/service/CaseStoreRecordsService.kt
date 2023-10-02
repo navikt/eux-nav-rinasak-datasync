@@ -57,6 +57,8 @@ class CaseStoreRecordsService(
         .map { repository.save(it) }
         .size
 
+    fun resetRecords() = repository.deleteAll()
+
     fun populateNavRinasakStaging(): Int {
         val caseStoreRecordsByRinasak = repository
             .findAll()

@@ -19,6 +19,7 @@ class DokumentInfoIdService(
     ): Dokument {
         try {
             val journalpost = safClient.safJournalpost(journalpostId)
+            log.info("Fant journalpost: $journalpost")
             val sedId = tilSedId(journalpost.eksternReferanseId)
             val safDokument = journalpost.dokumenter.firstOrNull()
             return Dokument(

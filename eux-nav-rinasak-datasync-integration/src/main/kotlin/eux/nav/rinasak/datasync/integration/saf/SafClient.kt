@@ -53,7 +53,6 @@ class SafClient(
     fun query(journalpostId: String) = GraphQlQuery(
         """query {
               journalpost(journalpostId: "$journalpostId") {
-                journalposter {
                   journalpostId
                   tittel
                   journalposttype
@@ -63,7 +62,6 @@ class SafClient(
                     dokumentInfoId
                     tittel
                   }
-                }
               }
         }""".trimIndent()
     )

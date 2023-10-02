@@ -14,9 +14,9 @@ spring:
     open-in-view: false
     properties:
       hibernate:
-        show_sql: true
-        use_sql_comments: true
-        format_sql: true
+        show_sql: false
+        use_sql_comments: false
+        format_sql: false
         jdbc:
           batch_size: 50
         order_updates: true

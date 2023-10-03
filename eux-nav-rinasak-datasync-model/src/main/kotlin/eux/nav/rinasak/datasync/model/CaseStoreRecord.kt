@@ -1,7 +1,7 @@
 package eux.nav.rinasak.datasync.model
 
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
+import jakarta.persistence.EnumType.STRING
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import java.time.LocalDateTime
@@ -21,6 +21,6 @@ data class CaseStoreRecord(
     val bucId: UUID?,
     val opprettetBruker: String? = "ukjent",
     val opprettetDato: LocalDateTime? = now(),
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     val syncStatus: SyncStatus
 )

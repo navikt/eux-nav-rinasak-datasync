@@ -5,4 +5,6 @@ data class Stats(
     val dokumenterCount: Long,
     val initiellFagsakCount: Long,
     val caseStoreRecordCount: Long,
+    val caseStoreRecordPendingCount: Long,
+    val caseStoreRecordSyncedCount: Long,
 )

@@ -44,6 +44,14 @@
             <td>case store record count</td>
             <td th:text="${stats.caseStoreRecordCount}"></td>
         </tr>
+        <tr>
+            <td>case store record count - pending</td>
+            <td th:text="${stats.getCaseStoreRecordPendingCount}"></td>
+        </tr>
+        <tr>
+            <td>case store record count - synced</td>
+            <td th:text="${stats.caseStoreRecordSyncedCount}"></td>
+        </tr>
         </tbody>
     </table>
 </div>

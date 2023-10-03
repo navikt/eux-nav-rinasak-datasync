@@ -1,6 +1,8 @@
 package eux.nav.rinasak.datasync.service
 
 import eux.nav.rinasak.datasync.model.Stats
+import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
+import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import eux.nav.rinasak.datasync.persistence.InitiellFagsakRepository
@@ -20,5 +22,7 @@ class StatsService(
             dokumenterCount = dokumentRepository.count(),
             initiellFagsakCount = initiellFagsakRepository.count(),
             caseStoreRecordCount = caseStoreRecordRepository.count(),
+            caseStoreRecordPendingCount = caseStoreRecordRepository.countBySyncStatus(PENDING),
+            caseStoreRecordSyncedCount = caseStoreRecordRepository.countBySyncStatus(SYNCED),
         )
 }

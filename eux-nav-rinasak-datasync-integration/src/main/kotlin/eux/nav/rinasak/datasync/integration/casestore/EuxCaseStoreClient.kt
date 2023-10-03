@@ -43,7 +43,7 @@ class EuxCaseStoreClient(
 
     fun stats(): EuxCaseStoreCaseStats {
         val entity: ResponseEntity<EuxCaseStoreCaseStats> = euxCaseStoreRestTemplate
-            .getForEntity("${euxCaseStoreUrl}/stats", EuxCaseStoreCaseStats::class.java)
+            .getForEntity("${euxCaseStoreUrl}/cases/stats", EuxCaseStoreCaseStats::class.java)
         if (!entity.statusCode.is2xxSuccessful)
             throw RuntimeException("Kunne ikke hente stats, status code: ${entity.statusCode}")
         return entity.body!!

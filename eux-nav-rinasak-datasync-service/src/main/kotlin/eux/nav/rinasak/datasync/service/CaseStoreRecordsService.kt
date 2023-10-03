@@ -2,10 +2,7 @@ package eux.nav.rinasak.datasync.service
 
 import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreCase
 import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreClient
-import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
-import eux.nav.rinasak.datasync.model.InitiellFagsak
-import eux.nav.rinasak.datasync.model.NavRinasak
 import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import org.slf4j.Logger
@@ -17,9 +14,7 @@ import java.util.*
 class CaseStoreRecordsService(
     val euxCaseStoreClient: EuxCaseStoreClient,
     val repository: CaseStoreRecordRepository,
-    val navRinasakService: NavRinasakService,
-    val safClient: SafClient,
-    val dokumentInfoIdService: DokumentInfoIdService
+    val stagingService: CaseStoreRecordsStagingService
 ) {
     val log: Logger = LoggerFactory.getLogger(CaseStoreRecordsService::class.java)
 
@@ -105,7 +100,7 @@ class CaseStoreRecordsService(
         caseStoreRecordsWithOneEntry
             .filterNot { it.value.journalpostId.isNullOrEmpty() }
             .also { log.info("${it.size} rina cases in case store with 1 record and journalpostId") }
-            .forEach { stageCaseStoreRecordWithOneEntryAndJournalpostId(it.key, it.value) }
+            .forEach { stagingService.stageCaseStoreRecordWithOneEntryAndJournalpostId(it.key, it.value) }
 
     fun stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(
         caseStoreRecordsWithMoreThanOneEntry: Map<Int, List<CaseStoreRecord>>
@@ -113,7 +108,7 @@ class CaseStoreRecordsService(
         caseStoreRecordsWithMoreThanOneEntry
             .filter { entry -> entry.value.any { !it.journalpostId.isNullOrEmpty() } }
             .also { log.info("${it.size} rina cases in case store with more than 1 record and journalpost") }
-            .forEach { stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(it.key, it.value) }
+            .forEach { stagingService.stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(it.key, it.value) }
 
     fun stageCaseStoreRecordsWithMoreThanOneEntryMissingJournalpost(
         caseStoreRecordsWithMoreThanOneEntry: Map<Int, List<CaseStoreRecord>>
@@ -131,7 +126,7 @@ class CaseStoreRecordsService(
             .map { it.fagsakId }
             .firstOrNull()
         if (fagsakId != null)
-            stageCaseStoreRecordWithMissingJournalpostId(rinasakId, fagsakId)
+            stagingService.stageCaseStoreRecordWithMissingJournalpostId(rinasakId, fagsakId, records)
         else
             log.info("Rinasak $rinasakId har ikke fagsakId eller journalpostId og mer enn 1 case store record")
     }
@@ -142,50 +137,9 @@ class CaseStoreRecordsService(
     ) {
         val fagsakId = record.fagsakId
         if (fagsakId != null)
-            stageCaseStoreRecordWithMissingJournalpostId(rinasakId, fagsakId)
+            stagingService.stageCaseStoreRecordWithMissingJournalpostId(rinasakId, fagsakId, record)
         else
             log.info("Rinasak $rinasakId har ikke fagsakId eller journalpostId og 1 case store record")
     }
 
-    fun stageCaseStoreRecordWithMissingJournalpostId(rinasakId: Int, fagsakId: String) {
-        val navRinasak = NavRinasak(rinasakId = rinasakId)
-        val safSak = safClient.safSak(fagsakId)
-        val initiellFagsak = InitiellFagsak(
-            navRinasakUuid = navRinasak.navRinasakUuid,
-            id = fagsakId,
-            tema = safSak.tema,
-            system = safSak.fagsaksystem,
-            nr = safSak.arkivsaksnummer,
-            type = safSak.sakstype
-        )
-        navRinasakService.save(navRinasak)
-        navRinasakService.save(initiellFagsak)
-    }
-
-    fun stageCaseStoreRecordWithOneEntryAndJournalpostId(
-        rinasakId: Int,
-        record: CaseStoreRecord
-    ) {
-        val journalpostId = record.journalpostId
-            ?: throw RuntimeException("kodefeil relatert til rinasakid: $rinasakId, mangler journalpostId")
-        val navRinasak = NavRinasak(rinasakId = rinasakId)
-        val dokument = dokumentInfoIdService.dokument(
-            journalpostId = journalpostId,
-            navRinasakUuid = navRinasak.navRinasakUuid
-        )
-        navRinasakService.save(navRinasak)
-        navRinasakService.save(dokument)
-    }
-
-    fun stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(
-        rinasakId: Int,
-        records: List<CaseStoreRecord>
-    ) {
-        val navRinasak = NavRinasak(rinasakId = rinasakId)
-        navRinasakService.save(navRinasak)
-        records
-            .mapNotNull { it.journalpostId }
-            .map { dokumentInfoIdService.dokument(it, navRinasak.navRinasakUuid) }
-            .forEach { navRinasakService.save(it) }
-    }
 }

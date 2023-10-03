@@ -6,23 +6,46 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<table class="container">
-    <thead>
-    <tr>
-        <th>nav rinasak count</th>
-        <th>dokumenter</th>
-        <th>initielle fagsaker</th>
-        <th>case store record count</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td th:text="${stats.navRinasakCount}"></td>
-        <td th:text="${stats.dokumenterCount}"></td>
-        <td th:text="${stats.initiellFagsakCount}"></td>
-        <td th:text="${stats.caseStoreRecordCount}"></td>
-    </tr>
-    </tbody>
-</table>
+<div class="container">
+    <h1>Menu</h1>
+    <ul>
+        <li><a href="/case-store-records">case-store-records</a></li>
+        <li><a href="/populate-all-case-store-records">populate-all-case-store-records</a></li>
+        <li><a href="/populate-case-store-records">populate-case-store-records</a></li>
+        <li><a href="/populate-nav-rinasak">populate-nav-rinasak</a></li>
+        <li><a href="/reset-case-store-sync-status">reset-case-store-sync-status</a></li>
+        <li><a href="/reset-nav-rinasak">reset-nav-rinasak</a></li>
+        <li><a href="/reset-case-store-records">reset-case-store-records</a></li>
+        <li><a href="/stats">stats</a></li>
+    </ul>
+</div>
+<div class="container">
+    <table class="container">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>nav rinasak count</td>
+            <td th:text="${stats.dokumenterCount}"></td>
+        </tr>
+        <tr>
+            <td>dokumenter</td>
+            <td th:text="${stats.navRinasakCount}"></td>
+        </tr>
+        <tr>
+            <td>initielle fagsaker</td>
+            <td th:text="${stats.initiellFagsakCount}"></td>
+        </tr>
+        <tr>
+            <td>case store record count</td>
+            <td th:text="${stats.caseStoreRecordCount}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

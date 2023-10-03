@@ -1,5 +1,6 @@
 package eux.nav.rinasak.datasync.service
 
+import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreClient
 import eux.nav.rinasak.datasync.model.Stats
 import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
 import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED
@@ -15,9 +16,11 @@ class StatsService(
     val dokumentRepository: DokumentRepository,
     val initiellFagsakRepository: InitiellFagsakRepository,
     val caseStoreRecordRepository: CaseStoreRecordRepository,
+    val euxCaseStoreClient: EuxCaseStoreClient,
 ) {
-    fun stats() =
-        Stats(
+    fun stats(): Stats {
+        val exuCaseStoreStats = euxCaseStoreClient.stats()
+        return Stats(
             navRinasakCount = navRinasakRepository.count(),
             navRinasakPendingCount = navRinasakRepository.countBySyncStatus(PENDING),
             navRinasakSyncedCount = navRinasakRepository.countBySyncStatus(SYNCED),
@@ -30,5 +33,9 @@ class StatsService(
             caseStoreRecordCount = caseStoreRecordRepository.count(),
             caseStoreRecordPendingCount = caseStoreRecordRepository.countBySyncStatus(PENDING),
             caseStoreRecordSyncedCount = caseStoreRecordRepository.countBySyncStatus(SYNCED),
+            inEuxCaseStoreCount = exuCaseStoreStats.numberOfRecords,
+            inEuxCaseStorePendingCount = exuCaseStoreStats.numberOfPendingRecords,
+            inEuxCaseStoreSyncedCount = exuCaseStoreStats.numberOfSyncedRecords,
         )
+    }
 }

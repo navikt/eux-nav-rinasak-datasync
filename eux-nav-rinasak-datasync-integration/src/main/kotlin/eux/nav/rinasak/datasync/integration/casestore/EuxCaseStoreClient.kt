@@ -40,4 +40,12 @@ class EuxCaseStoreClient(
         if (!entity.statusCode.is2xxSuccessful)
             throw RuntimeException("Kunne ikke resette sync status")
     }
+
+    fun stats(): EuxCaseStoreCaseStats {
+        val entity: ResponseEntity<EuxCaseStoreCaseStats> = euxCaseStoreRestTemplate
+            .getForEntity("${euxCaseStoreUrl}/stats", EuxCaseStoreCaseStats::class.java)
+        if (!entity.statusCode.is2xxSuccessful)
+            throw RuntimeException("Kunne ikke hente stats, status code: ${entity.statusCode}")
+        return entity.body!!
+    }
 }

@@ -19,8 +19,14 @@ class StatsService(
     fun stats() =
         Stats(
             navRinasakCount = navRinasakRepository.count(),
+            navRinasakPendingCount = navRinasakRepository.countBySyncStatus(PENDING),
+            navRinasakSyncedCount = navRinasakRepository.countBySyncStatus(SYNCED),
             dokumenterCount = dokumentRepository.count(),
+            dokumenterPendingCount = dokumentRepository.countBySyncStatus(PENDING),
+            dokumenterSyncedCount = dokumentRepository.countBySyncStatus(SYNCED),
             initiellFagsakCount = initiellFagsakRepository.count(),
+            initiellFagsakPendingCount = initiellFagsakRepository.countBySyncStatus(PENDING),
+            initiellFagsakSyncedCount = initiellFagsakRepository.countBySyncStatus(SYNCED),
             caseStoreRecordCount = caseStoreRecordRepository.count(),
             caseStoreRecordPendingCount = caseStoreRecordRepository.countBySyncStatus(PENDING),
             caseStoreRecordSyncedCount = caseStoreRecordRepository.countBySyncStatus(SYNCED),

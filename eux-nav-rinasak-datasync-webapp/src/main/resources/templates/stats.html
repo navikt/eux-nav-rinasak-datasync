@@ -25,31 +25,33 @@
         <tr>
             <th>Item</th>
             <th>Count</th>
+            <th>Pending</th>
+            <th>Synced</th>
         </tr>
         </thead>
         <tbody>
         <tr>
             <td>nav rinasak count</td>
-            <td th:text="${stats.dokumenterCount}"></td>
+            <td th:text="${stats.navRinasakCount}"></td>
+            <td th:text="${stats.navRinasakPendingCount}"></td>
+            <td th:text="${stats.navRinasakSyncedCount}"></td>
         </tr>
         <tr>
             <td>dokumenter</td>
-            <td th:text="${stats.navRinasakCount}"></td>
+            <td th:text="${stats.dokumenterCount}"></td>
+            <td th:text="${stats.dokumenterPendingCount}"></td>
+            <td th:text="${stats.dokumenterSyncedCount}"></td>
         </tr>
         <tr>
             <td>initielle fagsaker</td>
             <td th:text="${stats.initiellFagsakCount}"></td>
+            <td th:text="${stats.initiellFagsakPendingCount}"></td>
+            <td th:text="${stats.initiellFagsakSyncedCount}"></td>
         </tr>
         <tr>
             <td>case store record count</td>
             <td th:text="${stats.caseStoreRecordCount}"></td>
-        </tr>
-        <tr>
-            <td>case store record count - pending</td>
-            <td th:text="${stats.getCaseStoreRecordPendingCount}"></td>
-        </tr>
-        <tr>
-            <td>case store record count - synced</td>
+            <td th:text="${stats.caseStoreRecordPendingCount}"></td>
             <td th:text="${stats.caseStoreRecordSyncedCount}"></td>
         </tr>
         </tbody>

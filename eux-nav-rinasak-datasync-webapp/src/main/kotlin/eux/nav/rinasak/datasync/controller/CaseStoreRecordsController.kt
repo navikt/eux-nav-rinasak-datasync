@@ -22,8 +22,6 @@ class CaseStoreRecordsController(
         model.caseStoreRecords()
         "case-store-records"
     } catch (e: Exception) {
-        log.error("feilet mot case store", e)
-        print(e)
         "case-store-records"
     }
 

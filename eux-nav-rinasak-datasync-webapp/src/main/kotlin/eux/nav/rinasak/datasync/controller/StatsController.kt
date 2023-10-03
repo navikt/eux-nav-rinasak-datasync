@@ -22,8 +22,6 @@ class StatsController(
         model.caseStoreRecords()
         "stats"
     } catch (e: Exception) {
-        log.error("feilet mot case store", e)
-        print(e)
         "stats"
     }
 

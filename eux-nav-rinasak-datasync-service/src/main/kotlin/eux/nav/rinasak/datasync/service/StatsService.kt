@@ -21,7 +21,7 @@ class StatsService(
     val caseStoreRecordRepository: CaseStoreRecordRepository,
     val euxCaseStoreClient: EuxCaseStoreClient,
 ) {
-    val log: Logger = LoggerFactory.getLogger(DokumentInfoIdService::class.java)
+    val log: Logger = LoggerFactory.getLogger(StatsService::class.java)
 
     fun stats(): Stats {
         val exuCaseStoreStats: EuxCaseStoreCaseStats = try {

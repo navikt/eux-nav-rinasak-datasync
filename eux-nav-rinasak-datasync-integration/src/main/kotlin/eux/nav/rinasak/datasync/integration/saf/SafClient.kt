@@ -17,13 +17,8 @@ class SafClient(
 ) {
     val log: Logger = LoggerFactory.getLogger(SafClient::class.java)
 
-    fun safSak(fagsakId: String) =
-        SafSak(
-            fagsakId = fagsakId,
-        )
-
-    fun safJournalpost(journalpostId: String): SafJournalpost {
-        val graphQlQuery = query(journalpostId)
+    fun safSak(fagsakId: String): SafSak {
+        val graphQlQuery = sakerQuery(fagsakId)
         val request = RequestEntity
             .post(
                 UriComponentsBuilder
@@ -33,10 +28,36 @@ class SafClient(
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body<GraphQlQuery>(graphQlQuery)
-        log.info("Henter SAF journalpost: $journalpostId")
+        log.info("Henter SAF saker for fagsakId: $fagsakId")
         val responseString = safRestTemplate
             .exchange(request, String::class.java)
-        log.info("SAF String: $responseString")
+        log.info("SAF Saker String: $responseString")
+        val response = safRestTemplate
+            .exchange(request, SafSakerRoot::class.java)
+        return if (response.statusCode.is2xxSuccessful) {
+            response
+                .body
+                ?.data
+                ?.saker
+                ?.first()
+                ?: throw RuntimeException("feilet mot saf, men med 200")
+        } else {
+            log.info("Feilet mot SAF (${response.statusCode.value()}), body: ${response.body}")
+            throw RuntimeException("feilet mot saf med ${response.statusCode.value()}")
+        }
+    }
+
+    fun safJournalpost(journalpostId: String): SafJournalpost {
+        val graphQlQuery = journalpostQuery(journalpostId)
+        val request = RequestEntity
+            .post(
+                UriComponentsBuilder
+                    .fromHttpUrl(safUrl)
+                    .path("/graphql").build().toUri()
+            )
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body<GraphQlQuery>(graphQlQuery)
         val response = safRestTemplate
             .exchange(request, SafJournalpostRoot::class.java)
         return if (response.statusCode.is2xxSuccessful) {
@@ -50,23 +71,37 @@ class SafClient(
         }
     }
 
-    fun query(journalpostId: String) = GraphQlQuery(
-        """query {
-              journalpost(journalpostId: "$journalpostId") {
-                  journalpostId
-                  tittel
-                  journalposttype
-                  journalstatus
-                  eksternReferanseId
-                  tema
-                  dokumenter {
-                    dokumentInfoId
-                    tittel
-                  }
-              }
-        }""".trimIndent()
-    )
 }
+
+fun journalpostQuery(journalpostId: String) = GraphQlQuery(
+    """query {
+          journalpost(journalpostId: "$journalpostId") {
+              journalpostId
+              tittel
+              journalposttype
+              journalstatus
+              eksternReferanseId
+              tema
+              dokumenter {
+                dokumentInfoId
+                tittel
+              }
+          }
+        }""".trimIndent()
+)
+
+fun sakerQuery(fagsakId: String) = GraphQlQuery(
+    """query {
+          saker(fagsakId: "$fagsakId") {
+            tema
+            fagsakId
+            fagsaksystem
+            arkivsaksnummer
+            arkivsaksystem
+            sakstype
+          }
+        }""".trimIndent()
+)
 
 data class GraphQlQuery(
     val query: String

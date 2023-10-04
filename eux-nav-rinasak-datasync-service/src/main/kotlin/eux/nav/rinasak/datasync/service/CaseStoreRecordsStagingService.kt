@@ -52,6 +52,7 @@ class CaseStoreRecordsStagingService(
         rinasakId: Int,
         record: CaseStoreRecord
     ) {
+        val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
         val journalpostId = record.journalpostId
             ?: throw RuntimeException("kodefeil relatert til rinasakid: $rinasakId, mangler journalpostId")
         val navRinasak = NavRinasak(rinasakId = rinasakId)
@@ -69,6 +70,7 @@ class CaseStoreRecordsStagingService(
         rinasakId: Int,
         records: List<CaseStoreRecord>
     ) {
+        val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
         val navRinasak = NavRinasak(rinasakId = rinasakId)
         navRinasakService.save(navRinasak)
         records

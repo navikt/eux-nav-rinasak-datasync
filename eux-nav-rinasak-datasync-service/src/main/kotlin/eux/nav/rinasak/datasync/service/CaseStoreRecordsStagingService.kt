@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class CaseStoreRecordsStagingService(
     val navRinasakService: NavRinasakService,
     val safClient: SafClient,
-    val dokumentInfoIdService: DokumentInfoIdService,
+    val dokumentService: DokumentService,
     val caseStoreRecordRepository: CaseStoreRecordRepository,
     val euxRinaApiClient: EuxRinaApiClient,
 ) {
@@ -56,7 +56,7 @@ class CaseStoreRecordsStagingService(
         val journalpostId = record.journalpostId
             ?: throw RuntimeException("kodefeil relatert til rinasakid: $rinasakId, mangler journalpostId")
         val navRinasak = NavRinasak(rinasakId = rinasakId)
-        val dokument = dokumentInfoIdService.dokument(
+        val dokument = dokumentService.dokument(
             journalpostId = journalpostId,
             navRinasakUuid = navRinasak.navRinasakUuid
         )
@@ -75,7 +75,7 @@ class CaseStoreRecordsStagingService(
         navRinasakService.save(navRinasak)
         records
             .mapNotNull { it.journalpostId }
-            .map { dokumentInfoIdService.dokument(it, navRinasak.navRinasakUuid) }
+            .map { dokumentService.dokument(it, navRinasak.navRinasakUuid) }
             .forEach { navRinasakService.save(it) }
         records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = SYNCED)) }
     }

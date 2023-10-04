@@ -20,6 +20,7 @@ class EuxRinaApiClient(
 
     @OptIn(ExperimentalTime::class)
     fun euxRinaSakOversikt(rinaSakId: Int): EuxRinaSakOversiktV3 {
+        log.info("Endpoint: ${euxRinaApiUrl}/v3/buc/$rinaSakId/oversikt")
         val (entity, duration) = measureTimedValue {
             log.info("Henter rinasak: $rinaSakId")
             val entity: ResponseEntity<EuxRinaSakOversiktV3> = euxRinaApiRestTemplate

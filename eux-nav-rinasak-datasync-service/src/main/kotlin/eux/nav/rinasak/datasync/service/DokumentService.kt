@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class DokumentInfoIdService(
+class DokumentService(
     val safClient: SafClient
 ) {
-    val log: Logger = LoggerFactory.getLogger(DokumentInfoIdService::class.java)
+    val log: Logger = LoggerFactory.getLogger(DokumentService::class.java)
 
     fun dokument(
         journalpostId: String,

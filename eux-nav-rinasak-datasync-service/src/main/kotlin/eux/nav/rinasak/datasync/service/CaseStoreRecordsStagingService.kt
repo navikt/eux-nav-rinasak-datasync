@@ -5,6 +5,7 @@ import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
 import eux.nav.rinasak.datasync.model.InitiellFagsak
 import eux.nav.rinasak.datasync.model.NavRinasak
+import eux.nav.rinasak.datasync.model.SyncStatus.RINASAK_NOT_FOUND
 import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import org.springframework.stereotype.Service
@@ -27,19 +28,23 @@ class CaseStoreRecordsStagingService(
     @Transactional
     fun stageCaseStoreRecordWithMissingJournalpostId(rinasakId: Int, fagsakId: String, records: List<CaseStoreRecord>) {
         val navRinasak = NavRinasak(rinasakId = rinasakId)
-        val fnr = euxRinaApiClient.fnr(rinasakId)
-        val safSak = safClient.safSak(fnr)
-        val initiellFagsak = InitiellFagsak(
-            navRinasakUuid = navRinasak.navRinasakUuid,
-            id = fagsakId,
-            tema = safSak.tema,
-            system = safSak.fagsaksystem,
-            nr = safSak.arkivsaksnummer,
-            type = safSak.sakstype
-        )
-        navRinasakService.save(navRinasak)
-        navRinasakService.save(initiellFagsak)
-        records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = SYNCED)) }
+        val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
+        if (fnr != null) {
+            val safSak = safClient.safSak(fnr)
+            val initiellFagsak = InitiellFagsak(
+                navRinasakUuid = navRinasak.navRinasakUuid,
+                id = fagsakId,
+                tema = safSak.tema,
+                system = safSak.fagsaksystem,
+                nr = safSak.arkivsaksnummer,
+                type = safSak.sakstype
+            )
+            navRinasakService.save(navRinasak)
+            navRinasakService.save(initiellFagsak)
+            records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = SYNCED)) }
+        } else {
+            records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = RINASAK_NOT_FOUND)) }
+        }
     }
 
     @Transactional

@@ -33,5 +33,10 @@ class EuxRinaApiClient(
         return entity.body!!
     }
 
-    fun fnr(rinaSakId: Int) = euxRinaSakOversikt(rinaSakId).fnr
+    fun fnrOrNull(rinaSakId: Int) = try {
+        euxRinaSakOversikt(rinaSakId).fnr
+    } catch (e: RuntimeException) {
+        log.error("Kunne ikke hente rinaSakId: $rinaSakId", e)
+        null
+    }
 }

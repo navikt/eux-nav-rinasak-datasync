@@ -13,6 +13,8 @@ data class Stats(
     val caseStoreRecordCount: Long,
     val caseStoreRecordPendingCount: Long,
     val caseStoreRecordSyncedCount: Long,
+    val caseStoreRecordRinasakNotFoundCount: Long,
+    val caseStoreRecordFagsakNotFoundCount: Long,
     val inEuxCaseStoreCount: Long,
     val inEuxCaseStorePendingCount: Long,
     val inEuxCaseStoreSyncedCount: Long,

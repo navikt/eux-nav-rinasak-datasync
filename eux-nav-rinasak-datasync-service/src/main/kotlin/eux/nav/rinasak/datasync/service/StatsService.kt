@@ -3,8 +3,7 @@ package eux.nav.rinasak.datasync.service
 import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreCaseStats
 import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreClient
 import eux.nav.rinasak.datasync.model.Stats
-import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
-import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED
+import eux.nav.rinasak.datasync.model.SyncStatus.*
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import eux.nav.rinasak.datasync.persistence.InitiellFagsakRepository
@@ -43,6 +42,8 @@ class StatsService(
             caseStoreRecordCount = caseStoreRecordRepository.count(),
             caseStoreRecordPendingCount = caseStoreRecordRepository.countBySyncStatus(PENDING),
             caseStoreRecordSyncedCount = caseStoreRecordRepository.countBySyncStatus(SYNCED),
+            caseStoreRecordRinasakNotFoundCount = caseStoreRecordRepository.countBySyncStatus(RINASAK_NOT_FOUND),
+            caseStoreRecordFagsakNotFoundCount = caseStoreRecordRepository.countBySyncStatus(FAGSAK_NOT_FOUND),
             inEuxCaseStoreCount = exuCaseStoreStats.numberOfRecords,
             inEuxCaseStorePendingCount = exuCaseStoreStats.numberOfPendingRecords,
             inEuxCaseStoreSyncedCount = exuCaseStoreStats.numberOfSyncedRecords,

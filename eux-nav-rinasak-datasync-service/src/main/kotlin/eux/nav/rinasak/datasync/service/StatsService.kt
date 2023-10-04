@@ -1,7 +1,7 @@
 package eux.nav.rinasak.datasync.service
 
-import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreCaseStats
-import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreClient
+import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreCaseStats
+import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreClient
 import eux.nav.rinasak.datasync.model.Stats
 import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
 import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED

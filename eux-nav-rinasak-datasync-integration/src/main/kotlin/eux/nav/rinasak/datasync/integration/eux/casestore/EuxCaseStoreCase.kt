@@ -1,4 +1,4 @@
-package eux.nav.rinasak.datasync.integration.casestore
+package eux.nav.rinasak.datasync.integration.eux.casestore
 
 import java.util.*
 

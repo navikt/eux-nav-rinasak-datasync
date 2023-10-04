@@ -1,6 +1,6 @@
 package eux.nav.rinasak.datasync.integration.navrinasak
 
-import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreCase
+import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreCase
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.ResponseEntity

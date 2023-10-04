@@ -1,5 +1,6 @@
 package eux.nav.rinasak.datasync.service
 
+import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxRinaApiClient
 import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
 import eux.nav.rinasak.datasync.model.InitiellFagsak
@@ -15,6 +16,7 @@ class CaseStoreRecordsStagingService(
     val safClient: SafClient,
     val dokumentInfoIdService: DokumentInfoIdService,
     val caseStoreRecordRepository: CaseStoreRecordRepository,
+    val euxRinaApiClient: EuxRinaApiClient,
 ) {
 
     @Transactional
@@ -25,7 +27,8 @@ class CaseStoreRecordsStagingService(
     @Transactional
     fun stageCaseStoreRecordWithMissingJournalpostId(rinasakId: Int, fagsakId: String, records: List<CaseStoreRecord>) {
         val navRinasak = NavRinasak(rinasakId = rinasakId)
-        val safSak = safClient.safSak(fagsakId)
+        val fnr = euxRinaApiClient.fnr(rinasakId)
+        val safSak = safClient.safSak(fnr)
         val initiellFagsak = InitiellFagsak(
             navRinasakUuid = navRinasak.navRinasakUuid,
             id = fagsakId,

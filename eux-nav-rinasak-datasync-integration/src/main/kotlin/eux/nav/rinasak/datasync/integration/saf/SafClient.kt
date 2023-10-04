@@ -17,8 +17,8 @@ class SafClient(
 ) {
     val log: Logger = LoggerFactory.getLogger(SafClient::class.java)
 
-    fun safSak(fagsakId: String): SafSak {
-        val graphQlQuery = sakerQuery(fagsakId)
+    fun safSak(fnr: String): SafSak {
+        val graphQlQuery = sakerQuery(fnr)
         val request = RequestEntity
             .post(
                 UriComponentsBuilder
@@ -28,7 +28,7 @@ class SafClient(
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body<GraphQlQuery>(graphQlQuery)
-        log.info("Henter SAF saker for fagsakId: $fagsakId")
+        log.info("Henter SAF saker for fnr: $fnr")
         val responseString = safRestTemplate
             .exchange(request, String::class.java)
         log.info("SAF Saker String: $responseString")
@@ -90,9 +90,9 @@ fun journalpostQuery(journalpostId: String) = GraphQlQuery(
         }""".trimIndent()
 )
 
-fun sakerQuery(fagsakId: String) = GraphQlQuery(
+fun sakerQuery(fnr: String) = GraphQlQuery(
     """query {
-          saker(fagsakId: "$fagsakId") {
+          saker(brukerId: { id: "$fnr", type:FNR } ) {
             tema
             fagsakId
             fagsaksystem

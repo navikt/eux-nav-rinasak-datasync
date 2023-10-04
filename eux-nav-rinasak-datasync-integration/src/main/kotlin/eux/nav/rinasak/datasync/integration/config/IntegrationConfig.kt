@@ -31,6 +31,20 @@ class IntegrationConfig {
     }
 
     @Bean
+    fun euxRinaApiRestTemplate(
+        restTemplateBuilder: RestTemplateBuilder,
+        clientConfigurationProperties: ClientConfigurationProperties,
+        oAuth2AccessTokenService: OAuth2AccessTokenService
+    ): RestTemplate {
+        val clientProperties: ClientProperties = clientConfigurationProperties
+            .registration["eux-rina-api-credentials"]
+            ?: throw RuntimeException("could not find oauth2 client config for eux-rina-api-credentials")
+        return restTemplateBuilder
+            .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
+            .build()
+    }
+
+    @Bean
     fun euxNavRinasakRestTemplate(
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,

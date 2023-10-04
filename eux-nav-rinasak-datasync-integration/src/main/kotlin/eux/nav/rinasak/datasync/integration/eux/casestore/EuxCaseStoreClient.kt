@@ -1,4 +1,4 @@
-package eux.nav.rinasak.datasync.integration.casestore
+package eux.nav.rinasak.datasync.integration.eux.casestore
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference

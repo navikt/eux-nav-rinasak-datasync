@@ -1,7 +1,7 @@
 package eux.nav.rinasak.datasync.service
 
-import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreCase
-import eux.nav.rinasak.datasync.integration.casestore.EuxCaseStoreClient
+import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreCase
+import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreClient
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
 import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
@@ -141,5 +141,4 @@ class CaseStoreRecordsService(
         else
             log.info("Rinasak $rinasakId har ikke fagsakId eller journalpostId og 1 case store record")
     }
-
 }

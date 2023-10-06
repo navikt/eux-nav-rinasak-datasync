@@ -17,7 +17,7 @@ class SafClient(
 ) {
     val log: Logger = LoggerFactory.getLogger(SafClient::class.java)
 
-    fun safSak(fnr: String): SafSak {
+    fun safSakerRoot(fnr: String): SafSakerRoot? {
         val graphQlQuery = sakerQuery(fnr)
         val request = RequestEntity
             .post(
@@ -29,21 +29,37 @@ class SafClient(
             .accept(APPLICATION_JSON)
             .body<GraphQlQuery>(graphQlQuery)
         log.info("Henter SAF saker for fnr: $fnr")
-        val responseString = safRestTemplate
-            .exchange(request, String::class.java)
-        log.info("SAF Saker String: $responseString")
         val response = safRestTemplate
             .exchange(request, SafSakerRoot::class.java)
         return if (response.statusCode.is2xxSuccessful) {
-            response
-                .body
-                ?.data
-                ?.saker
-                ?.first()
-                ?: throw RuntimeException("feilet mot saf, men med 200")
+            response.body
         } else {
             log.info("Feilet mot SAF (${response.statusCode.value()}), body: ${response.body}")
             throw RuntimeException("feilet mot saf med ${response.statusCode.value()}")
+        }
+    }
+
+    fun safSaker(fnr: String): List<SafSak> =
+        try {
+            safSakerRoot(fnr)!!
+                .data
+                .saker
+        } catch (e: RuntimeException) {
+            log.error("Kunne ikke hente saker fra SAF for fnr $fnr", e)
+            emptyList()
+        }
+
+    fun safSakOrNull(fnr: String, fagsakId: String): SafSak? {
+        val saker = safSaker(fnr)
+        val sakMedFagsakId = saker.firstOrNull { it.fagsakId == fagsakId }
+        return if (saker.isEmpty()) {
+            log.info("Tom liste fra SAF for fnr=$fnr og fagsakId=$fagsakId")
+            null
+        } else if (sakMedFagsakId != null) {
+            sakMedFagsakId
+        } else {
+            log.info("Treff mot SAF saker for $fnr (${saker.size}, men uten fagsakId $fagsakId, bruker første i lista")
+            saker.first()
         }
     }
 

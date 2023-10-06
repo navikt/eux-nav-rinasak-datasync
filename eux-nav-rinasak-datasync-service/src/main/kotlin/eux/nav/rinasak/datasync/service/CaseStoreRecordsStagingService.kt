@@ -2,11 +2,11 @@ package eux.nav.rinasak.datasync.service
 
 import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxRinaApiClient
 import eux.nav.rinasak.datasync.integration.saf.SafClient
+import eux.nav.rinasak.datasync.integration.saf.SafSak
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
 import eux.nav.rinasak.datasync.model.InitiellFagsak
 import eux.nav.rinasak.datasync.model.NavRinasak
-import eux.nav.rinasak.datasync.model.SyncStatus.RINASAK_NOT_FOUND
-import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED
+import eux.nav.rinasak.datasync.model.SyncStatus.*
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,8 +29,24 @@ class CaseStoreRecordsStagingService(
     fun stageCaseStoreRecordWithMissingJournalpostId(rinasakId: Int, fagsakId: String, records: List<CaseStoreRecord>) {
         val navRinasak = NavRinasak(rinasakId = rinasakId)
         val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
-        if (fnr != null) {
-            val safSak = safClient.safSak(fnr)
+        if (fnr != null)
+            stageCaseStoreRecordWithMissingJournalpostId(
+                safSak = safClient.safSakOrNull(fnr, fagsakId),
+                navRinasak = navRinasak,
+                fagsakId = fagsakId,
+                records = records
+            )
+        else
+            records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = RINASAK_NOT_FOUND)) }
+    }
+
+    private fun stageCaseStoreRecordWithMissingJournalpostId(
+        safSak: SafSak?,
+        navRinasak: NavRinasak,
+        fagsakId: String,
+        records: List<CaseStoreRecord>
+    ) {
+        if (safSak != null) {
             val initiellFagsak = InitiellFagsak(
                 navRinasakUuid = navRinasak.navRinasakUuid,
                 id = fagsakId,
@@ -43,7 +59,7 @@ class CaseStoreRecordsStagingService(
             navRinasakService.save(initiellFagsak)
             records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = SYNCED)) }
         } else {
-            records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = RINASAK_NOT_FOUND)) }
+            records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = FAGSAK_NOT_FOUND)) }
         }
     }
 
@@ -52,7 +68,6 @@ class CaseStoreRecordsStagingService(
         rinasakId: Int,
         record: CaseStoreRecord
     ) {
-        val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
         val journalpostId = record.journalpostId
             ?: throw RuntimeException("kodefeil relatert til rinasakid: $rinasakId, mangler journalpostId")
         val navRinasak = NavRinasak(rinasakId = rinasakId)
@@ -70,7 +85,6 @@ class CaseStoreRecordsStagingService(
         rinasakId: Int,
         records: List<CaseStoreRecord>
     ) {
-        val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
         val navRinasak = NavRinasak(rinasakId = rinasakId)
         navRinasakService.save(navRinasak)
         records

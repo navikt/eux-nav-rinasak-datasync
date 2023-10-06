@@ -9,4 +9,5 @@ import java.util.*
 @Repository
 interface CaseStoreRecordRepository : JpaRepository<CaseStoreRecord, UUID> {
     fun countBySyncStatus(syncStatus: SyncStatus): Long
+    fun findAllBySyncStatus(syncStatus: SyncStatus): List<CaseStoreRecord>
 }

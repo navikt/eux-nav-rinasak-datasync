@@ -56,7 +56,8 @@ class CaseStoreRecordsService(
 
     fun populateNavRinasakStaging(): Int {
         val caseStoreRecordsByRinasak = repository
-            .findAll()
+            .findAllBySyncStatus(PENDING)
+            .also { log.info("${it.size} case store records pending sync") }
             .groupBy { it.rinasakId }
         caseStoreRecordsWithOneEntry(caseStoreRecordsByRinasak)
             .also {

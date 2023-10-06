@@ -109,7 +109,7 @@ class CaseStoreRecordsService(
         caseStoreRecordsWithMoreThanOneEntry
             .filter { entry -> entry.value.any { !it.journalpostId.isNullOrEmpty() } }
             .also { log.info("${it.size} rina cases in case store with more than 1 record and journalpost") }
-            .forEach { stagingService.stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(it.key, it.value) }
+            .forEach { stagingService.stageCaseStoreRecordsWithMoreThanOneEntryWithJournalposts(it.key, it.value) }
 
     fun stageCaseStoreRecordsWithMoreThanOneEntryMissingJournalpost(
         caseStoreRecordsWithMoreThanOneEntry: Map<Int, List<CaseStoreRecord>>

@@ -22,11 +22,12 @@ class DokumentService(
             log.info("Fant journalpost: $journalpost")
             val sedId = tilSedId(journalpost.eksternReferanseId)
             val safDokument = journalpost.dokumenter.firstOrNull()
+            //TODO via via via
             return Dokument(
                 navRinasakUuid = navRinasakUuid,
                 dokumentInfoId = safDokument?.dokumentInfoId ?: "mangler",
                 sedId = sedId,
-                sedType = "tbd",
+                sedType = safDokument?.brevkode ?: "mangler",
             )
         } catch (e: RuntimeException) {
             log.error("Feilet i uthenting av navRinasakUuid $navRinasakUuid, journalpostId: $journalpostId", e)
@@ -37,7 +38,6 @@ class DokumentService(
                 sedType = "tbd",
             )
         }
-
     }
 
     private fun tilSedId(eksternReferanseId: String): String {

@@ -51,15 +51,15 @@ class SafClient(
 
     fun safSakOrNull(fnr: String, fagsakId: String): SafSak? {
         val saker = safSaker(fnr)
-        val sakMedFagsakId = saker.firstOrNull { it.fagsakId == fagsakId }
+        val sakMedFagsakId = saker.firstOrNull { it.arkivsaksnummer == fagsakId }
         return if (saker.isEmpty()) {
-            log.info("Tom liste fra SAF for fnr=$fnr og fagsakId=$fagsakId")
+            log.error("Tom liste fra SAF for fnr=$fnr og fagsakId=$fagsakId")
             null
         } else if (sakMedFagsakId != null) {
             sakMedFagsakId
         } else {
-            log.info("Treff mot SAF saker for $fnr (${saker.size}, men uten fagsakId $fagsakId, bruker første i lista")
-            saker.first()
+            log.error("Treff mot SAF saker for $fnr (${saker.size}), men uten fagsakId $fagsakId, saker=$saker")
+            null
         }
     }
 
@@ -101,6 +101,7 @@ fun journalpostQuery(journalpostId: String) = GraphQlQuery(
               dokumenter {
                 dokumentInfoId
                 tittel
+                brevkode
               }
           }
         }""".trimIndent()

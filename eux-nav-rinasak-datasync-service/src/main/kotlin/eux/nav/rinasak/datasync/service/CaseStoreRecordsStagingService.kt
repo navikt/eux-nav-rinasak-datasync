@@ -33,7 +33,6 @@ class CaseStoreRecordsStagingService(
             stageCaseStoreRecordWithMissingJournalpostId(
                 safSak = safClient.safSakOrNull(fnr, fagsakId),
                 navRinasak = navRinasak,
-                fagsakId = fagsakId,
                 records = records
             )
         else
@@ -43,16 +42,15 @@ class CaseStoreRecordsStagingService(
     private fun stageCaseStoreRecordWithMissingJournalpostId(
         safSak: SafSak?,
         navRinasak: NavRinasak,
-        fagsakId: String,
         records: List<CaseStoreRecord>
     ) {
         if (safSak != null) {
             val initiellFagsak = InitiellFagsak(
                 navRinasakUuid = navRinasak.navRinasakUuid,
-                id = fagsakId,
+                id = safSak.arkivsaksnummer,
                 tema = safSak.tema,
                 system = safSak.fagsaksystem,
-                nr = safSak.arkivsaksnummer,
+                nr = safSak.fagsakId,
                 type = safSak.sakstype
             )
             navRinasakService.save(navRinasak)
@@ -81,7 +79,7 @@ class CaseStoreRecordsStagingService(
     }
 
     @Transactional
-    fun stageCaseStoreRecordsWithMoreThanOneEntryWithJournalpost(
+    fun stageCaseStoreRecordsWithMoreThanOneEntryWithJournalposts(
         rinasakId: Int,
         records: List<CaseStoreRecord>
     ) {

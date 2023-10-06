@@ -7,19 +7,27 @@
 </head>
 <body>
 <div class="container">
-    <h1>Menu</h1>
+    <h2>Verktøy</h2>
     <ul>
         <li><a href="/case-store-records">case-store-records</a></li>
-        <li><a href="/populate-all-case-store-records">populate-all-case-store-records</a></li>
-        <li><a href="/populate-case-store-records">populate-case-store-records</a></li>
-        <li><a href="/populate-nav-rinasak">populate-nav-rinasak</a></li>
-        <li><a href="/reset-case-store-sync-status">reset-case-store-sync-status</a></li>
-        <li><a href="/reset-nav-rinasak">reset-nav-rinasak</a></li>
-        <li><a href="/reset-case-store-records">reset-case-store-records</a></li>
         <li><a href="/stats">stats</a></li>
+        <li><a href="/sandbox">sandbox</a></li>
+        <li><a href="/populate-case-store-records">populate-case-store-records (stage 1, delvis)</a></li>
+    </ul>
+    <h2>Flytt av data</h2>
+    <ul>
+        <li><a href="/populate-all-case-store-records">Stage 1: populate-all-case-store-records</a></li>
+        <li><a href="/populate-nav-rinasak">Stage 2: populate-nav-rinasak</a></li>
+    </ul>
+    <h2>Tilbakestilling</h2>
+    <ul>
+        <li><a href="/reset-case-store-sync-status">Stage 1: reset-case-store-sync-status</a></li>
+        <li><a href="/reset-case-store-records">Stage 1: reset-case-store-records</a></li>
+        <li><a href="/reset-nav-rinasak">Stage 2: reset-nav-rinasak</a></li>
     </ul>
 </div>
 <div class="container">
+    <h2>Sync Status</h2>
     <table class="container">
         <thead>
         <tr>
@@ -55,22 +63,29 @@
             <td th:text="${stats.caseStoreRecordSyncedCount}"></td>
         </tr>
         <tr>
-            <td>case store record count - rinasak not found</td>
-            <td th:text="${stats.caseStoreRecordRinasakNotFoundCount}"></td>
-            <td>na</td>
-            <td>na</td>
-        </tr>
-        <tr>
-            <td>case store record count - fagsak not found</td>
-            <td th:text="${stats.caseStoreRecordFagsakNotFoundCount}"></td>
-            <td>na</td>
-            <td>na</td>
-        </tr>
-        <tr>
             <td>eux case store record count</td>
             <td th:text="${stats.inEuxCaseStoreCount}"></td>
             <td th:text="${stats.inEuxCaseStorePendingCount}"></td>
             <td th:text="${stats.inEuxCaseStoreSyncedCount}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Stats</h2>
+    <table class="container">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>case store record count - rinasak not found</td>
+            <td th:text="${stats.caseStoreRecordRinasakNotFoundCount}"></td>
+        </tr>
+        <tr>
+            <td>case store record count - fagsak not found</td>
+            <td th:text="${stats.caseStoreRecordFagsakNotFoundCount}"></td>
         </tr>
         </tbody>
     </table>

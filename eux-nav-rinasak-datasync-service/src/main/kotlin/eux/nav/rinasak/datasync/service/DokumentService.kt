@@ -21,13 +21,21 @@ class DokumentService(
             val journalpost = safClient.safJournalpost(journalpostId)
             log.info("Fant journalpost: $journalpost")
             val sedId = tilSedId(journalpost.eksternReferanseId)
-            val safDokument = journalpost.dokumenter.firstOrNull()
-            //TODO via via via
+            val dokumentInfoId = journalpost
+                .dokumenter
+                .firstOrNull()
+                ?.dokumentInfoId
+                ?: throw RuntimeException("Fant ikke dokumentInfoId for $journalpostId")
+            val safDokument = safClient
+                .firstTilknyttetJournalpostOrNull(dokumentInfoId)
+                ?.dokumenter
+                ?.firstOrNull()
+                ?: throw RuntimeException("Fant ikke saf dokument for $dokumentInfoId")
             return Dokument(
                 navRinasakUuid = navRinasakUuid,
-                dokumentInfoId = safDokument?.dokumentInfoId ?: "mangler",
+                dokumentInfoId = safDokument.dokumentInfoId,
                 sedId = sedId,
-                sedType = safDokument?.brevkode ?: "mangler",
+                sedType = safDokument.brevkode ?: "brevkode mangler",
             )
         } catch (e: RuntimeException) {
             log.error("Feilet i uthenting av navRinasakUuid $navRinasakUuid, journalpostId: $journalpostId", e)

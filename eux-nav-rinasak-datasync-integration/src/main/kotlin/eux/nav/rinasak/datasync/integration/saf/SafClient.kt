@@ -87,11 +87,58 @@ class SafClient(
         }
     }
 
+    fun firstTilknyttetJournalpostOrNull(dokumentInfoId: String): SafJournalpost? =
+        tilknyttedeJournalposterRoot(dokumentInfoId)
+            .data
+            .tilknyttedeJournalposter
+            .firstOrNull()
+
+    fun tilknyttedeJournalposterRoot(dokumentInfoId: String): SafTilknyttedeJournalposterRoot {
+        val graphQlQuery = tilknyttedeJournalposterQuery(dokumentInfoId)
+        val request = RequestEntity
+            .post(
+                UriComponentsBuilder
+                    .fromHttpUrl(safUrl)
+                    .path("/graphql").build().toUri()
+            )
+            .contentType(APPLICATION_JSON)
+            .accept(APPLICATION_JSON)
+            .body<GraphQlQuery>(graphQlQuery)
+        log.info("Henter SAF tilknyttede journalposter for dokument info id: $dokumentInfoId")
+        val response = safRestTemplate
+            .exchange(request, SafTilknyttedeJournalposterRoot::class.java)
+        return if (response.statusCode.is2xxSuccessful) {
+            response
+                .body
+                ?: throw RuntimeException("feilet mot saf tilknyttede journalposter, men med 200")
+        } else {
+            log.info("Feilet mot SAF (${response.statusCode.value()}), body: ${response.body}")
+            throw RuntimeException("feilet mot saf med ${response.statusCode.value()}")
+        }
+    }
 }
 
 fun journalpostQuery(journalpostId: String) = GraphQlQuery(
     """query {
           journalpost(journalpostId: "$journalpostId") {
+              journalpostId
+              tittel
+              journalposttype
+              journalstatus
+              eksternReferanseId
+              tema
+              dokumenter {
+                dokumentInfoId
+                tittel
+                brevkode
+              }
+          }
+        }""".trimIndent()
+)
+
+fun tilknyttedeJournalposterQuery(dokumentInfoId: String) = GraphQlQuery(
+    """query {
+          tilknyttedeJournalposter(dokumentInfoId: "$dokumentInfoId", tilknytning: GJENBRUK) {
               journalpostId
               tittel
               journalposttype

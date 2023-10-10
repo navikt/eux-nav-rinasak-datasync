@@ -13,26 +13,18 @@ class DokumentService(
 ) {
     val log: Logger = LoggerFactory.getLogger(DokumentService::class.java)
 
-    fun dokument(
+    fun dokumentOrNull(
         journalpostId: String,
         navRinasakUuid: UUID
-    ): Dokument {
+    ): Dokument? {
         try {
             val journalpost = safClient.safJournalpost(journalpostId)
             log.info("Fant journalpost: $journalpost")
-            val dokumentInfoId = journalpost
+            val sedId = tilSedId(journalpost.eksternReferanseId)
+            val safDokument = journalpost
                 .dokumenter
                 .firstOrNull()
-                ?.dokumentInfoId
-                ?: throw RuntimeException("Fant ikke dokumentInfoId for $journalpostId")
-            val nyesteJournalpost = safClient
-                .firstTilknyttetJournalpostOrNull(dokumentInfoId)
-                ?: throw RuntimeException("Fant ikke saf dokument for $dokumentInfoId")
-            val sedId = tilSedId(nyesteJournalpost.eksternReferanseId)
-            val safDokument = nyesteJournalpost
-                .dokumenter
-                .firstOrNull()
-                ?: throw RuntimeException("Ingen dokumenter knyttet til nyeste journalpost for: $dokumentInfoId")
+                ?: throw RuntimeException("Ingen dokumenter knyttet til journalpost: $journalpostId")
             return Dokument(
                 navRinasakUuid = navRinasakUuid,
                 dokumentInfoId = safDokument.dokumentInfoId,
@@ -40,13 +32,8 @@ class DokumentService(
                 sedType = safDokument.brevkode ?: "brevkode mangler",
             )
         } catch (e: RuntimeException) {
-            log.error("Feilet i uthenting av navRinasakUuid $navRinasakUuid, journalpostId: $journalpostId", e)
-            return Dokument(
-                navRinasakUuid = navRinasakUuid,
-                dokumentInfoId = "mangler",
-                sedId = "mangler",
-                sedType = "tbd",
-            )
+            log.error("Kunne ikke hente dokument for journalpostId: $journalpostId ($navRinasakUuid)", e)
+            return null
         }
     }
 

@@ -18,6 +18,8 @@ data class InitiellFagsak(
     val system: String?,
     val nr: String?,
     val type: String?,
+    val arkiv: String?,
+    val fnr: String,
     val opprettetBruker: String = "datasync",
     val opprettetDato: LocalDateTime = now(),
     @Enumerated(EnumType.STRING)

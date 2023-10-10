@@ -33,6 +33,7 @@ class CaseStoreRecordsStagingService(
             stageCaseStoreRecordWithMissingJournalpostId(
                 safSak = safClient.safSakOrNull(fnr, fagsakId),
                 navRinasak = navRinasak,
+                fnr = fnr,
                 records = records
             )
         else
@@ -42,6 +43,7 @@ class CaseStoreRecordsStagingService(
     private fun stageCaseStoreRecordWithMissingJournalpostId(
         safSak: SafSak?,
         navRinasak: NavRinasak,
+        fnr: String,
         records: List<CaseStoreRecord>
     ) {
         if (safSak != null) {
@@ -51,7 +53,9 @@ class CaseStoreRecordsStagingService(
                 tema = safSak.tema,
                 system = safSak.fagsaksystem,
                 nr = safSak.fagsakId,
-                type = safSak.sakstype
+                type = safSak.sakstype,
+                fnr = fnr,
+                arkiv = safSak.arkivsaksystem
             )
             navRinasakService.save(navRinasak)
             navRinasakService.save(initiellFagsak)
@@ -69,12 +73,12 @@ class CaseStoreRecordsStagingService(
         val journalpostId = record.journalpostId
             ?: throw RuntimeException("kodefeil relatert til rinasakid: $rinasakId, mangler journalpostId")
         val navRinasak = NavRinasak(rinasakId = rinasakId)
-        val dokument = dokumentService.dokument(
+        val dokument = dokumentService.dokumentOrNull(
             journalpostId = journalpostId,
             navRinasakUuid = navRinasak.navRinasakUuid
         )
         navRinasakService.save(navRinasak)
-        navRinasakService.save(dokument)
+        dokument?.let { navRinasakService.save(it) }
         caseStoreRecordRepository.save(record.copy(syncStatus = SYNCED))
     }
 
@@ -87,7 +91,7 @@ class CaseStoreRecordsStagingService(
         navRinasakService.save(navRinasak)
         records
             .mapNotNull { it.journalpostId }
-            .map { dokumentService.dokument(it, navRinasak.navRinasakUuid) }
+            .mapNotNull { dokumentService.dokumentOrNull(it, navRinasak.navRinasakUuid) }
             .forEach { navRinasakService.save(it) }
         records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = SYNCED)) }
     }

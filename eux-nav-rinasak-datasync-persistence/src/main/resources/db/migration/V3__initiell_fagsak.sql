@@ -7,7 +7,7 @@ CREATE TABLE initiell_fagsak
     nr               varchar(100),
     type             varchar(100),
     arkiv            varchar(100),
-    aktoer_id        varchar(100),
+    fnr              varchar(100),
     sync_status      varchar(32),
     opprettet_bruker varchar(100),
     opprettet_dato   timestamp

@@ -112,7 +112,7 @@ class SafClient(
                 .body
                 ?: throw RuntimeException("feilet mot saf tilknyttede journalposter, men med 200")
         } else {
-            log.info("Feilet mot SAF (${response.statusCode.value()}), body: ${response.body}")
+            log.error("Feilet mot SAF (${response.statusCode.value()}), body: ${response.body}")
             throw RuntimeException("feilet mot saf med ${response.statusCode.value()}")
         }
     }

@@ -105,6 +105,9 @@ class SafClient(
             .accept(APPLICATION_JSON)
             .body<GraphQlQuery>(graphQlQuery)
         log.info("Henter SAF tilknyttede journalposter for dokument info id: $dokumentInfoId")
+        val responseString = safRestTemplate
+            .exchange(request, String::class.java)
+        log.info("Saf string response: ${responseString.body}")
         val response = safRestTemplate
             .exchange(request, SafTilknyttedeJournalposterRoot::class.java)
         return if (response.statusCode.is2xxSuccessful) {

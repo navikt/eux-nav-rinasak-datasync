@@ -20,17 +20,19 @@ class DokumentService(
         try {
             val journalpost = safClient.safJournalpost(journalpostId)
             log.info("Fant journalpost: $journalpost")
-            val sedId = tilSedId(journalpost.eksternReferanseId)
             val dokumentInfoId = journalpost
                 .dokumenter
                 .firstOrNull()
                 ?.dokumentInfoId
                 ?: throw RuntimeException("Fant ikke dokumentInfoId for $journalpostId")
-            val safDokument = safClient
+            val nyesteJournalpost = safClient
                 .firstTilknyttetJournalpostOrNull(dokumentInfoId)
-                ?.dokumenter
-                ?.firstOrNull()
                 ?: throw RuntimeException("Fant ikke saf dokument for $dokumentInfoId")
+            val sedId = tilSedId(nyesteJournalpost.eksternReferanseId)
+            val safDokument = nyesteJournalpost
+                .dokumenter
+                .firstOrNull()
+                ?: throw RuntimeException("Ingen dokumenter knyttet til nyeste journalpost for: $dokumentInfoId")
             return Dokument(
                 navRinasakUuid = navRinasakUuid,
                 dokumentInfoId = safDokument.dokumentInfoId,

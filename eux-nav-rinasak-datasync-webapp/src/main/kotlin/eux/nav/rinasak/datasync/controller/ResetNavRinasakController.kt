@@ -1,6 +1,6 @@
 package eux.nav.rinasak.datasync.controller
 
-import eux.nav.rinasak.datasync.service.ResetNavRinasakDatasyncService
+import eux.nav.rinasak.datasync.service.navrinasak.ResetNavRinasakDatasyncService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

@@ -1,4 +1,4 @@
-package eux.nav.rinasak.datasync.service
+package eux.nav.rinasak.datasync.service.casestore
 
 import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxRinaApiClient
 import eux.nav.rinasak.datasync.integration.saf.SafClient
@@ -8,6 +8,8 @@ import eux.nav.rinasak.datasync.model.InitiellFagsak
 import eux.nav.rinasak.datasync.model.NavRinasak
 import eux.nav.rinasak.datasync.model.SyncStatus.*
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
+import eux.nav.rinasak.datasync.service.navrinasak.DokumentService
+import eux.nav.rinasak.datasync.service.navrinasak.NavRinasakService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

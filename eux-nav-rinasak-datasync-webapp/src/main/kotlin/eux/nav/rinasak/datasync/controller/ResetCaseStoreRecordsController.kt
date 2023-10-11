@@ -1,6 +1,6 @@
 package eux.nav.rinasak.datasync.controller
 
-import eux.nav.rinasak.datasync.service.CaseStoreRecordsService
+import eux.nav.rinasak.datasync.service.casestore.CaseStoreRecordsService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

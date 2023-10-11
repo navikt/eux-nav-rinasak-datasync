@@ -1,9 +1,9 @@
-package eux.nav.rinasak.datasync.service
+package eux.nav.rinasak.datasync.service.casestore
 
 import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreCase
 import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreClient
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
-import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
+import eux.nav.rinasak.datasync.model.SyncStatus.*
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -19,6 +19,10 @@ class CaseStoreRecordsService(
     val log: Logger = LoggerFactory.getLogger(CaseStoreRecordsService::class.java)
 
     fun cases(): List<CaseStoreRecord> = repository.findAll()
+
+    fun casesFagsakNotFound(): List<CaseStoreRecord> = repository.findAllBySyncStatus(FAGSAK_NOT_FOUND)
+
+    fun casesRinasakNotFound(): List<CaseStoreRecord> = repository.findAllBySyncStatus(RINASAK_NOT_FOUND)
 
     fun EuxCaseStoreCase.toCaseStoreRecord() =
         CaseStoreRecord(

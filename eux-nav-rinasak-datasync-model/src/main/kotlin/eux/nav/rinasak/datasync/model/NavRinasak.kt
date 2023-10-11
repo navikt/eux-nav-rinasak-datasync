@@ -19,4 +19,6 @@ data class NavRinasak(
     val opprettetDato: LocalDateTime = now(),
     @Enumerated(EnumType.STRING)
     val syncStatus: SyncStatus = PENDING
-)
+) {
+
+}

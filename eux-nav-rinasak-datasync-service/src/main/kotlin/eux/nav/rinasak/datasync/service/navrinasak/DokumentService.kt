@@ -1,4 +1,4 @@
-package eux.nav.rinasak.datasync.service
+package eux.nav.rinasak.datasync.service.navrinasak
 
 import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.model.Dokument

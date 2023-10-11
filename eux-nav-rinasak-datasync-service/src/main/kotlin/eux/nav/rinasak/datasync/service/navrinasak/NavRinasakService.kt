@@ -1,4 +1,4 @@
-package eux.nav.rinasak.datasync.service
+package eux.nav.rinasak.datasync.service.navrinasak
 
 import eux.nav.rinasak.datasync.model.Dokument
 import eux.nav.rinasak.datasync.model.InitiellFagsak
@@ -6,6 +6,7 @@ import eux.nav.rinasak.datasync.model.NavRinasak
 import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import eux.nav.rinasak.datasync.persistence.InitiellFagsakRepository
 import eux.nav.rinasak.datasync.persistence.NavRinasakRepository
+import eux.nav.rinasak.datasync.service.casestore.CaseStoreRecordsService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull

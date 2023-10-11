@@ -1,6 +1,6 @@
 package eux.nav.rinasak.datasync.controller
 
-import eux.nav.rinasak.datasync.service.SandboxService
+import eux.nav.rinasak.datasync.service.util.SandboxService
 import no.nav.security.token.support.core.api.Unprotected
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger

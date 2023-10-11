@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping
 
 @Unprotected
 @Controller
-class CaseStoreRecordsController(
+class CaseStoreRecordsRinasakNotFoundController(
     val caseStoreRecordsService: CaseStoreRecordsService
 ) {
-    val log: Logger = getLogger(CaseStoreRecordsController::class.java)
+    val log: Logger = getLogger(CaseStoreRecordsRinasakNotFoundController::class.java)
 
-    @GetMapping("/case-store-records")
+    @GetMapping("/case-store-records/rinasak-not-found")
     fun caseStoreRecords(
         model: Model,
     ) = try {
@@ -28,6 +28,6 @@ class CaseStoreRecordsController(
     fun Model.caseStoreRecords() =
         addAttribute(
             "caseStoreRecords",
-            caseStoreRecordsService.cases()
+            caseStoreRecordsService.casesRinasakNotFound()
         )
 }

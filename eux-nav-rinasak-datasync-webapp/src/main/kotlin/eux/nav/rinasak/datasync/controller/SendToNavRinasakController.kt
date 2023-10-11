@@ -1,6 +1,6 @@
 package eux.nav.rinasak.datasync.controller
 
-import eux.nav.rinasak.datasync.service.CaseStoreRecordsService
+import eux.nav.rinasak.datasync.service.navrinasak.SendToNavRinasakFacadeService
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @Unprotected
 @Controller
 class SendToNavRinasakController(
-    val caseStoreRecordsService: CaseStoreRecordsService
+    val sendToNavRinasakFacadeService: SendToNavRinasakFacadeService
 ) {
 
     @GetMapping("/send-to-nav-rinasak")
@@ -27,8 +27,7 @@ class SendToNavRinasakController(
         @RequestParam("inputNumber") inputNumber: Int?,
         model: Model
     ): String {
-        val numberOfFetchedRecords = caseStoreRecordsService.populateAll()
-        model.addAttribute("numberOfFetchedRecords", numberOfFetchedRecords)
+        model.addAttribute("numberOfFetchedRecords", sendToNavRinasakFacadeService.sync())
         return "send-to-nav-rinasak"
     }
 }

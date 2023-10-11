@@ -1,4 +1,4 @@
-package eux.nav.rinasak.datasync.service
+package eux.nav.rinasak.datasync.service.util
 
 import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreCaseStats
 import eux.nav.rinasak.datasync.integration.eux.casestore.EuxCaseStoreClient

@@ -2,6 +2,8 @@ package eux.nav.rinasak.datasync.service.navrinasak
 
 import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.model.Dokument
+import eux.nav.rinasak.datasync.model.SyncStatus.PENDING
+import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -9,9 +11,14 @@ import java.util.*
 
 @Service
 class DokumentService(
-    val safClient: SafClient
+    val safClient: SafClient,
+    val dokumentRepository: DokumentRepository
 ) {
     val log: Logger = LoggerFactory.getLogger(DokumentService::class.java)
+
+    fun dokumenter(): List<Dokument> = dokumentRepository.findAll()
+
+    fun dokumenterPending(): List<Dokument> = dokumentRepository.findAllBySyncStatus(PENDING)
 
     fun dokumentOrNull(
         journalpostId: String,

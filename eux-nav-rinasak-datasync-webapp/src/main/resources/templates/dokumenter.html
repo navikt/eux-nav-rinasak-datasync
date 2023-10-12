@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Case store records</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="style-list.css">
+</head>
+<body>
+<table class="container">
+    <thead>
+    <tr>
+        <th>dokumentUuid</th>
+        <th>navRinasakUuid</th>
+        <th>dokumentInfoId</th>
+        <th>sedId</th>
+        <th>sedType</th>
+        <th>syncStatus</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="dokument:${dokumenter}">
+        <td th:text="${dokument.dokumentUuid}"></td>
+        <td th:text="${dokument.navRinasakUuid}"></td>
+        <td th:text="${dokument.dokumentInfoId}"></td>
+        <td th:text="${dokument.sedId}"></td>
+        <td th:text="${dokument.sedType}"></td>
+        <td th:text="${dokument.syncStatus}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

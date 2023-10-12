@@ -29,7 +29,10 @@ class CaseStoreRecordsStagingService(
 
     @Transactional
     fun stageCaseStoreRecordWithMissingJournalpostId(rinasakId: Int, fagsakId: String, records: List<CaseStoreRecord>) {
-        val navRinasak = NavRinasak(rinasakId = rinasakId)
+        val navRinasak = NavRinasak(
+            rinasakId = rinasakId,
+            overstyrtEnhetsnummer = records.overstyrtEnhetsnummer()
+        )
         val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
         if (fnr != null)
             stageCaseStoreRecordWithMissingJournalpostId(
@@ -74,7 +77,10 @@ class CaseStoreRecordsStagingService(
     ) {
         val journalpostId = record.journalpostId
             ?: throw RuntimeException("kodefeil relatert til rinasakid: $rinasakId, mangler journalpostId")
-        val navRinasak = NavRinasak(rinasakId = rinasakId)
+        val navRinasak = NavRinasak(
+            rinasakId = rinasakId,
+            overstyrtEnhetsnummer = record.overstyrtEnhetsnummer
+        )
         val dokument = dokumentService.dokumentOrNull(
             journalpostId = journalpostId,
             navRinasakUuid = navRinasak.navRinasakUuid
@@ -89,7 +95,10 @@ class CaseStoreRecordsStagingService(
         rinasakId: Int,
         records: List<CaseStoreRecord>
     ) {
-        val navRinasak = NavRinasak(rinasakId = rinasakId)
+        val navRinasak = NavRinasak(
+            rinasakId = rinasakId,
+            overstyrtEnhetsnummer = records.overstyrtEnhetsnummer()
+        )
         navRinasakService.save(navRinasak)
         records
             .mapNotNull { it.journalpostId }
@@ -97,4 +106,6 @@ class CaseStoreRecordsStagingService(
             .forEach { navRinasakService.save(it) }
         records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = SYNCED)) }
     }
+
+    fun List<CaseStoreRecord>.overstyrtEnhetsnummer() = firstNotNullOfOrNull { it.overstyrtEnhetsnummer }
 }

@@ -15,10 +15,9 @@ data class NavRinasak(
     @Id
     val navRinasakUuid: UUID = randomUUID(),
     val rinasakId: Int,
+    val overstyrtEnhetsnummer: String?,
     val opprettetBruker: String = "datasync",
     val opprettetDato: LocalDateTime = now(),
     @Enumerated(EnumType.STRING)
     val syncStatus: SyncStatus = PENDING
-) {
-
-}
+)

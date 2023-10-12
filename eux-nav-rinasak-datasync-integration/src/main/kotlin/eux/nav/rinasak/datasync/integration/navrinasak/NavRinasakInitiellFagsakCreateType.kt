@@ -7,5 +7,5 @@ data class NavRinasakInitiellFagsakCreateType(
     val nr: String? = null,
     val type: String? = null,
     val arkiv: String? = null,
-    val aktoerId: String? = null
+    val fnr: String? = null
 )

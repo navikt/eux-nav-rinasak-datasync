@@ -85,7 +85,7 @@ fun InitiellFagsak.toNavRinasakInitiellFagsakCreateType() =
         nr = nr,
         type = type,
         arkiv = arkiv,
-        aktoerId = fnr
+        fnr = fnr
     )
 
 fun List<Dokument>.toNavRinasakDokumentCreateTypes() =

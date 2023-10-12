@@ -4,7 +4,7 @@ import eux.nav.rinasak.datasync.integration.navrinasak.*
 import eux.nav.rinasak.datasync.model.Dokument
 import eux.nav.rinasak.datasync.model.InitiellFagsak
 import eux.nav.rinasak.datasync.model.NavRinasak
-import eux.nav.rinasak.datasync.model.SyncStatus
+import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED
 import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import eux.nav.rinasak.datasync.persistence.InitiellFagsakRepository
 import eux.nav.rinasak.datasync.persistence.NavRinasakRepository
@@ -49,11 +49,11 @@ class SendToNavRinasakIntegrationService(
             navRinasakDokumentCreateTypes = navRinasakDokumentCreateTypes,
             navRinasakInitiellFagsakCreateType = navRinasakInitiellFagsakCreateType
         )
-        navRinasakRepository.save(navRinasak.copy(syncStatus = SyncStatus.SYNCED))
+        navRinasakRepository.save(navRinasak.copy(syncStatus = SYNCED))
         initielleFagsakerPending[navRinasak.navRinasakUuid]
-            ?.let { initiellFagsakRepository.save(it) }
+            ?.let { initiellFagsakRepository.save(it.copy(syncStatus = SYNCED)) }
         dokumenterPending[navRinasak.navRinasakUuid]
-            ?.forEach { dokumentRepository.save(it) }
+            ?.forEach { dokumentRepository.save(it.copy(syncStatus = SYNCED)) }
         navRinasakClient.opprettNavRinasak(navRinasakCreateType)
         log.info("NAV Rinasak opprettet: ${navRinasak.rinasakId}")
     }

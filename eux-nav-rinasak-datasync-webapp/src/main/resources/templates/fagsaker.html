@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Case store records</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="style-list.css">
+</head>
+<body>
+<table class="container">
+    <thead>
+    <tr>
+        <th>navRinasakUuid</th>
+        <th>id</th>
+        <th>tema</th>
+        <th>system</th>
+        <th>nr</th>
+        <th>type</th>
+        <th>arkiv</th>
+        <th>fnr length</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="fagsak:${fagsaker}">
+        <td th:text="${fagsak.navRinasakUuid}"></td>
+        <td th:text="${fagsak.id}"></td>
+        <td th:text="${fagsak.tema}"></td>
+        <td th:text="${fagsak.system}"></td>
+        <td th:text="${fagsak.nr}"></td>
+        <td th:text="${fagsak.type}"></td>
+        <td th:text="${fagsak.arkiv}"></td>
+        <td th:text="${fagsak.fnr.length}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

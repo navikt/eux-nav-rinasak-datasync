@@ -1,4 +1,4 @@
-name: Deploy to production
+name: production
 run-name: Deploy version ${{ github.event.inputs.version }} to NAIS, prod-gcp, production
 
 on:

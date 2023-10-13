@@ -9,6 +9,9 @@ spec:
   image: {{ image }}
   ingresses:
     - {{ ingress }}
+  env:
+    - name: ENDPOINT_CASESTORE
+      value: {{ endpoint.casestore }}
   gcp:
     sqlInstances:
       - type: POSTGRES_14

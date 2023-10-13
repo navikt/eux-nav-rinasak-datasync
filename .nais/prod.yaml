@@ -3,3 +3,5 @@ ingress: https://eux-nav-rinasak-datasync.intern.nav.no
 database:
   name: eux-nav-rinasak-datasync-db
   tier: db-custom-1-3840
+endpoint:
+  casestore: https://eux-case-store.prod-fss-pub.nais.io

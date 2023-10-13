@@ -54,7 +54,7 @@ spec:
         extra:
           - "NAVident"
     sidecar:
-      enabled: true
+      enabled: false
       autoLogin: true
   accessPolicy:
     outbound:

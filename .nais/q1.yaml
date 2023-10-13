@@ -3,3 +3,16 @@ ingress: https://eux-nav-rinasak-datasync-q1.intern.dev.nav.no
 database:
   name: eux-nav-rinasak-datasync-db-q1
   tier: db-f1-micro
+client:
+  casestore:
+    endpoint: https://eux-case-store-q1.dev-fss-pub.nais.io
+    scope: api://dev-fss.eessibasis.eux-case-store-q1/.default
+  rinaapi:
+    endpoint: https://eux-rina-api-q1.dev-fss-pub.nais.io
+    scope: api://dev-fss.eessibasis.eux-rina-api-q1/.default
+  navrinasak:
+    endpoint: http://eux-nav-rinasak-q1
+    scope: api://dev-gcp.eessibasis.eux-nav-rinasak-q1/.default
+  saf:
+    endpoint: https://saf-q1.dev-fss-pub.nais.io
+    scope: api://dev-fss.teamdokumenthandtering.saf/.default

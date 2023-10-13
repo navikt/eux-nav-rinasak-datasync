@@ -9,17 +9,6 @@ spec:
   image: {{ image }}
   ingresses:
     - {{ ingress }}
-  env:
-    - name: CLIENT_CASESTORE_ENDPOINT
-      value: {{ client.casestore.endpoint }}
-    - name: CLIENT_CASESTORE_SCOPE
-      value: {{ client.casestore.scope }}
-    - name: ENDPOINT_RINAAPI
-      value: {{ endpoint.rinaapi }}
-    - name: ENDPOINT_NAVRINASAK
-      value: {{ endpoint.navrinasak }}
-    - name: ENDPOINT_SAF
-      value: {{ endpoint.saf }}
   gcp:
     sqlInstances:
       - type: POSTGRES_14
@@ -80,3 +69,20 @@ spec:
         - application: eux-nav-rinasak-q1
         - application: eux-nav-rinasak-q2
         - application: eux-nav-rinasak
+  env:
+    - name: CLIENT_CASESTORE_ENDPOINT
+      value: {{ client.casestore.endpoint }}
+    - name: CLIENT_CASESTORE_SCOPE
+      value: {{ client.casestore.scope }}
+    - name: CLIENT_RINAAPI_ENDPOINT
+      value: {{ client.rinaapi.endpoint }}
+    - name: CLIENT_RINAAPI_SCOPE
+      value: {{ client.rinaapi.scope }}
+    - name: CLIENT_NAVRINASAK_ENDPOINT
+      value: {{ client.navrinasak.endpoint }}
+    - name: CLIENT_NAVRINASAK_SCOPE
+      value: {{ client.navrinasak.scope }}
+    - name: CLIENT_SAF_ENDPOINT
+      value: {{ client.saf.endpoint }}
+    - name: CLIENT_SAF_SCOPE
+      value: {{ client.saf.scope }}

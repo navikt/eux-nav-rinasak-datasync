@@ -10,10 +10,10 @@ spec:
   ingresses:
     - {{ ingress }}
   env:
-    - name: ENDPOINT_CASESTORE
-      value: {{ endpoint.casestore }}
-    - name: CLIENTSCOPE_CASESTORE
-      value: {{ clientscope.casestore }}
+    - name: CLIENT_CASESTORE_ENDPOINT
+      value: {{ client.casestore.endpoint }}
+    - name: CLIENT_CASESTORE_SCOPE
+      value: {{ client.casestore.scope }}
     - name: ENDPOINT_RINAAPI
       value: {{ endpoint.rinaapi }}
     - name: ENDPOINT_NAVRINASAK

@@ -5,3 +5,5 @@ database:
   tier: db-custom-1-3840
 endpoint:
   casestore: https://eux-case-store.prod-fss-pub.nais.io
+clientscope:
+  casestore: api://prod-fss.eessibasis.eux-case-store/.default

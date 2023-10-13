@@ -5,3 +5,8 @@ database:
   tier: db-f1-micro
 endpoint:
   casestore: https://eux-case-store-q2.dev-fss-pub.nais.io
+  rinaapi: https://eux-rina-api-q2.dev-fss-pub.nais.io
+  navrinasak: http://eux-nav-rinasak-q2
+  saf: https://saf-q2.dev-fss-pub.nais.io
+clientscope:
+  casestore: api://dev-fss.eessibasis.eux-case-store-q2/.default

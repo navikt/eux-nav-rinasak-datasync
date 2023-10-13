@@ -12,6 +12,12 @@ spec:
   env:
     - name: ENDPOINT_CASESTORE
       value: {{ endpoint.casestore }}
+    - name: ENDPOINT_RINAAPI
+      value: {{ endpoint.rinaapi }}
+    - name: ENDPOINT_NAVRINASAK
+      value: {{ endpoint.navrinasak }}
+    - name: ENDPOINT_SAF
+      value: {{ endpoint.saf }}
   gcp:
     sqlInstances:
       - type: POSTGRES_14

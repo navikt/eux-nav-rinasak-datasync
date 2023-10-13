@@ -11,7 +11,7 @@ import org.springframework.web.client.postForEntity
 
 @Component
 class EuxCaseStoreClient(
-    @Value("\${endpoint.eux.casestore}")
+    @Value("\${endpoint.casestore}")
     val euxCaseStoreUrl: String,
     val euxCaseStoreRestTemplate: RestTemplate
 ) {

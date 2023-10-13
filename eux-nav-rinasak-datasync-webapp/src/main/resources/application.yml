@@ -80,8 +80,7 @@ no.nav.security.jwt:
           client-auth-method: private_key_jwt
 
 endpoint:
-  eux:
-    casestore: ${ENDPOINT_CASESTORE}
-    rinaapi: https://eux-rina-api-q2.dev-fss-pub.nais.io
-    navrinasak: http://eux-nav-rinasak-q2
-    saf: https://saf-q2.dev-fss-pub.nais.io
+  casestore: ${ENDPOINT_CASESTORE}
+  rinaapi: ${ENDPOINT_RINAAPI}
+  navrinasak: ${ENDPOINT_NAVRINASAK}
+  saf: ${ENDPOINT_SAF}

@@ -11,7 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class SafClient(
-    @Value("\${endpoint.eux.saf}")
+    @Value("\${endpoint.saf}")
     val safUrl: String,
     val safRestTemplate: RestTemplate
 ) {

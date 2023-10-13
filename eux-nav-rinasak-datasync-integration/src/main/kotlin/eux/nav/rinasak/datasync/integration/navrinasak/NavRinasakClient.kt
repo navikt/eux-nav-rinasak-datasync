@@ -9,7 +9,7 @@ import org.springframework.web.client.postForEntity
 
 @Component
 class NavRinasakClient(
-    @Value("\${endpoint.eux.navrinasak}")
+    @Value("\${endpoint.navrinasak}")
     val euxNavRinasakUrl: String,
     val euxNavRinasakRestTemplate: RestTemplate
 ) {

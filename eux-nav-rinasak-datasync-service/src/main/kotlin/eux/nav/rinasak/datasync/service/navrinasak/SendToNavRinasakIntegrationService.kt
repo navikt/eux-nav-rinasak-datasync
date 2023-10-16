@@ -94,6 +94,7 @@ fun List<Dokument>.toNavRinasakDokumentCreateTypes() =
 fun Dokument.toNavRinasakDokumentCreateType() =
     NavRinasakDokumentCreateType(
         sedId = sedId,
+        sedVersjon = sedVersjon,
         sedType = sedType,
         dokumentInfoId = dokumentInfoId,
     )

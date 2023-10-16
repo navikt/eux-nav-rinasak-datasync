@@ -30,6 +30,7 @@ class SendToNavRinasakFacadeService(
             .findAllBySyncStatus(PENDING)
             .filter { it.gyldigSedId() }
             .map { it.copy(sedId = uuidString(it.sedId)) }
+            .filter { it.sedVersjon >= 0 }
             .groupBy { it.navRinasakUuid }
         log.info("Sender ${navRinasakerPending.count()} NAV Rinasaker...")
         navRinasakerPending

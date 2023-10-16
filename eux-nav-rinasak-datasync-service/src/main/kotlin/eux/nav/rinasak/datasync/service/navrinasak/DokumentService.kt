@@ -28,6 +28,7 @@ class DokumentService(
             val journalpost = safClient.safJournalpost(journalpostId)
             log.info("Fant journalpost: $journalpost")
             val sedId = tilSedId(journalpost.eksternReferanseId)
+            val sedVersjon = tilSedVersjon(journalpost.eksternReferanseId)
             val safDokument = journalpost
                 .dokumenter
                 .firstOrNull()
@@ -36,6 +37,7 @@ class DokumentService(
                 navRinasakUuid = navRinasakUuid,
                 dokumentInfoId = safDokument.dokumentInfoId,
                 sedId = sedId,
+                sedVersjon = sedVersjon,
                 sedType = safDokument.brevkode ?: "brevkode mangler",
             )
         } catch (e: RuntimeException) {
@@ -53,6 +55,19 @@ class DokumentService(
         } catch (e: RuntimeException) {
             log.info("Ugyldig format på ekstern referanse id {}", eksternReferanseId, e)
             eksternReferanseId
+        }
+    }
+
+    private fun tilSedVersjon(eksternReferanseId: String): Int {
+        return try {
+            eksternReferanseId
+                .split("_".toRegex())
+                .dropLastWhile { it.isEmpty() }
+                .toTypedArray()[2]
+                .toInt()
+        } catch (e: RuntimeException) {
+            log.info("Ugyldig format på ekstern referanse id for sed versjon {}", eksternReferanseId, e)
+            -1
         }
     }
 }

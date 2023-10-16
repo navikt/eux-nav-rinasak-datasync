@@ -17,6 +17,7 @@ data class Dokument(
     val navRinasakUuid: UUID,
     val dokumentInfoId: String,
     val sedId: String,
+    val sedVersjon: Int,
     val sedType: String,
     val opprettetBruker: String = "datasync",
     val opprettetDato: LocalDateTime = now(),

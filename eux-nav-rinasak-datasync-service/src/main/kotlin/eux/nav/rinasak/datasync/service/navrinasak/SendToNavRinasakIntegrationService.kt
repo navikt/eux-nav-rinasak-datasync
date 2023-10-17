@@ -57,14 +57,14 @@ class SendToNavRinasakIntegrationService(
         navRinasakClient.opprettNavRinasak(navRinasakCreateType)
         log.info("NAV Rinasak opprettet: ${navRinasak.rinasakId}")
     }
-}
 
-
-fun NavRinasakType.oppdaterNavRinasak(
-    navRinasak: NavRinasak,
-    initielleFagsakerPending: Map<UUID, InitiellFagsak>,
-    dokumenterPending: Map<UUID, List<Dokument>>
-) {
+    fun NavRinasakType.oppdaterNavRinasak(
+        navRinasak: NavRinasak,
+        initielleFagsakerPending: Map<UUID, InitiellFagsak>,
+        dokumenterPending: Map<UUID, List<Dokument>>
+    ) {
+        log.info("Oppdaterer NAV Rinasak ${navRinasak.rinasakId} ...")
+    }
 }
 
 fun NavRinasak.toNavRinasakCreateType(

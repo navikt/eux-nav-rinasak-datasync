@@ -52,7 +52,6 @@ class CaseStoreRecordsService(
         .nextCases()
         .map { euxCaseStoreClient.save(it.copy(syncStatus = "SYNCED")) }
         .map { it.toCaseStoreRecord() }
-        .also { log.info("next case store page size: ${it.size}") }
         .map { repository.save(it) }
         .size
 

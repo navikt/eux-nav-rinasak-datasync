@@ -45,7 +45,7 @@ class SafClient(
                 .data
                 .saker
         } catch (e: RuntimeException) {
-            log.error("Kunne ikke hente saker fra SAF for fnr $fnr", e)
+            log.error("Kunne ikke hente saker fra SAF på fnr", e)
             emptyList()
         }
 
@@ -53,12 +53,12 @@ class SafClient(
         val saker = safSaker(fnr)
         val sakMedFagsakId = saker.firstOrNull { it.arkivsaksnummer == fagsakId }
         return if (saker.isEmpty()) {
-            log.error("Tom liste fra SAF for fnr=$fnr og fagsakId=$fagsakId")
+            log.error("Tom liste fra SAF for fnr og fagsakId $fagsakId")
             null
         } else if (sakMedFagsakId != null) {
             sakMedFagsakId
         } else {
-            log.error("Treff mot SAF saker for $fnr (${saker.size}), men uten fagsakId $fagsakId, saker=$saker")
+            log.error("Treff mot SAF saker på fnr (${saker.size}), men uten fagsakId $fagsakId")
             null
         }
     }

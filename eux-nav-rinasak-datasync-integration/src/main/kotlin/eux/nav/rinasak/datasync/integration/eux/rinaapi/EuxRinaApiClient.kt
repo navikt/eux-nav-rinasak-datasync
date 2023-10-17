@@ -21,13 +21,11 @@ class EuxRinaApiClient(
     @OptIn(ExperimentalTime::class)
     fun euxRinaSakOversikt(rinaSakId: Int): EuxRinaSakOversiktV3 {
         val (entity, duration) = measureTimedValue {
-            log.info("Henter rinasak: $rinaSakId")
             val entity: ResponseEntity<EuxRinaSakOversiktV3> = euxRinaApiRestTemplate
                 .getForEntity("${euxRinaApiUrl}/v3/buc/$rinaSakId/oversikt")
             entity
         }
         log.info("Det tok ${duration.inWholeMilliseconds} milliseconds å hente ut rina oversikt for fnr")
-        log.info("hentet fnr ${entity.body!!.fnr} for rinasak $rinaSakId")
         if (!entity.statusCode.is2xxSuccessful)
             throw RuntimeException("Kunne ikke hente fnr fra eux rina api, status code: ${entity.statusCode}")
         return entity.body!!

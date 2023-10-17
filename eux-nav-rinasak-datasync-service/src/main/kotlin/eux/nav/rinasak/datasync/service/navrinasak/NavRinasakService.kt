@@ -33,16 +33,13 @@ class NavRinasakService(
 
     fun save(initiellFagsak: InitiellFagsak) {
         val existingInitiellFagsak = initiellFagsakRepository.findByIdOrNull(initiellFagsak.navRinasakUuid)
-        if (existingInitiellFagsak == null) {
-            log.info("legger til initiell fagsak ${initiellFagsak.id} på: ${initiellFagsak.navRinasakUuid}")
+        if (existingInitiellFagsak == null)
             initiellFagsakRepository.save(initiellFagsak)
-        } else {
+        else
             log.info("rinasak ${initiellFagsak.navRinasakUuid} har alt initiell fagsak, skipping")
-        }
     }
 
     fun save(dokument: Dokument) {
-        log.info("legger til dokument ${dokument.dokumentInfoId} på: ${dokument.navRinasakUuid}")
         dokumentRepository.save(dokument)
     }
 }

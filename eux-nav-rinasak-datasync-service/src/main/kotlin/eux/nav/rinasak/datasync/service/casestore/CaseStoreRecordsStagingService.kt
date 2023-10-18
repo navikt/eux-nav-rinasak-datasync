@@ -52,11 +52,15 @@ class CaseStoreRecordsStagingService(
         records: List<CaseStoreRecord>
     ) {
         if (safSak != null) {
+            val system = if (safSak.sakstype == "GENERELL_SAK")
+                null
+            else
+                safSak.fagsaksystem
             val initiellFagsak = InitiellFagsak(
                 navRinasakUuid = navRinasak.navRinasakUuid,
                 id = safSak.arkivsaksnummer,
                 tema = safSak.tema,
-                system = safSak.fagsaksystem,
+                system = system,
                 nr = safSak.fagsakId,
                 type = safSak.sakstype,
                 fnr = fnr,

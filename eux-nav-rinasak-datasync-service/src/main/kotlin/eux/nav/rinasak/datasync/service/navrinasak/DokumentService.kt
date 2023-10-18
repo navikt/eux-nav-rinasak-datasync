@@ -26,7 +26,6 @@ class DokumentService(
     ): Dokument? {
         try {
             val journalpost = safClient.safJournalpost(journalpostId)
-            log.info("Fant journalpost: $journalpost")
             val sedId = tilSedId(journalpost.eksternReferanseId)
             val sedVersjon = tilSedVersjon(journalpost.eksternReferanseId)
             val safDokument = journalpost

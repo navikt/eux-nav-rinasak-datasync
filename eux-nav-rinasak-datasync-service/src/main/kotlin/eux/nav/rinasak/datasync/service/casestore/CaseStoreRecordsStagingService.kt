@@ -4,14 +4,19 @@ import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxRinaApiClient
 import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.integration.saf.SafSak
 import eux.nav.rinasak.datasync.model.CaseStoreRecord
+import eux.nav.rinasak.datasync.model.Dokument
 import eux.nav.rinasak.datasync.model.InitiellFagsak
 import eux.nav.rinasak.datasync.model.NavRinasak
 import eux.nav.rinasak.datasync.model.SyncStatus.*
+import eux.nav.rinasak.datasync.model.exception.InvalidEksternReferanseIdException
 import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import eux.nav.rinasak.datasync.service.navrinasak.DokumentService
 import eux.nav.rinasak.datasync.service.navrinasak.NavRinasakService
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class CaseStoreRecordsStagingService(
@@ -21,6 +26,7 @@ class CaseStoreRecordsStagingService(
     val caseStoreRecordRepository: CaseStoreRecordRepository,
     val euxRinaApiClient: EuxRinaApiClient,
 ) {
+    val log: Logger = LoggerFactory.getLogger(DokumentService::class.java)
 
     @Transactional
     fun stageCaseStoreRecordWithMissingJournalpostId(rinasakId: Int, fagsakId: String, record: CaseStoreRecord) {
@@ -59,8 +65,8 @@ class CaseStoreRecordsStagingService(
             val initiellFagsak = InitiellFagsak(
                 navRinasakUuid = navRinasak.navRinasakUuid,
                 id = safSak.arkivsaksnummer,
-                tema = safSak.tema,
                 system = system,
+                tema = safSak.tema,
                 nr = safSak.fagsakId,
                 type = safSak.sakstype,
                 fnr = fnr,
@@ -85,12 +91,12 @@ class CaseStoreRecordsStagingService(
             rinasakId = rinasakId,
             overstyrtEnhetsnummer = record.overstyrtEnhetsnummer
         )
-        val dokument = dokumentService.dokumentOrNull(
+        val dokument = dokumentService.dokument(
             journalpostId = journalpostId,
             navRinasakUuid = navRinasak.navRinasakUuid
         )
         navRinasakService.save(navRinasak)
-        dokument?.let { navRinasakService.save(it) }
+        navRinasakService.save(dokument)
         caseStoreRecordRepository.save(record.copy(syncStatus = SYNCED))
     }
 
@@ -106,9 +112,22 @@ class CaseStoreRecordsStagingService(
         navRinasakService.save(navRinasak)
         records
             .mapNotNull { it.journalpostId }
-            .mapNotNull { dokumentService.dokumentOrNull(it, navRinasak.navRinasakUuid) }
+            .mapNotNull { dokument(it, rinasakId, navRinasak.navRinasakUuid) }
             .forEach { navRinasakService.save(it) }
         records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = SYNCED)) }
+    }
+
+    fun dokument(journalpostId: String, rinasakId: Int, navRinasakUuid: UUID): Dokument? {
+        val errorKeys = "rinasakid=$rinasakId, journalpostId=$journalpostId, navRinasakUuid=$navRinasakUuid"
+        return try {
+            dokumentService.dokument(journalpostId, navRinasakUuid)
+        } catch (e: InvalidEksternReferanseIdException) {
+            log.error("Feil format på ekstern referanse id. $errorKeys", e)
+            null
+        } catch (e: RuntimeException) {
+            log.error("Uventet feil i mapping av dokument. $errorKeys", e)
+            null
+        }
     }
 
     fun List<CaseStoreRecord>.overstyrtEnhetsnummer() = firstNotNullOfOrNull { it.overstyrtEnhetsnummer }

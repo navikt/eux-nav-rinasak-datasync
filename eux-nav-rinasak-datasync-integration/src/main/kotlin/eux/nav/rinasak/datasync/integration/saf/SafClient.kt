@@ -28,7 +28,6 @@ class SafClient(
             .contentType(APPLICATION_JSON)
             .accept(APPLICATION_JSON)
             .body<GraphQlQuery>(graphQlQuery)
-        log.info("Henter SAF saker for fnr: $fnr")
         val response = safRestTemplate
             .exchange(request, SafSakerRoot::class.java)
         return if (response.statusCode.is2xxSuccessful) {

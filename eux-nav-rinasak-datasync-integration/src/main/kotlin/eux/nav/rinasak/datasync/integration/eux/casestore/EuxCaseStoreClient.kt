@@ -27,7 +27,6 @@ class EuxCaseStoreClient(
 
     fun nextCases() =
         euxCaseStoreRestTemplate
-            .also { println("${euxCaseStoreUrl}/cases/next") }
             .exchange(
                 "${euxCaseStoreUrl}/cases/next",
                 GET, null, object : ParameterizedTypeReference<List<EuxCaseStoreCase>>() {}

@@ -91,12 +91,9 @@ class CaseStoreRecordsStagingService(
             rinasakId = rinasakId,
             overstyrtEnhetsnummer = record.overstyrtEnhetsnummer
         )
-        val dokument = dokumentService.dokument(
-            journalpostId = journalpostId,
-            navRinasakUuid = navRinasak.navRinasakUuid
-        )
+        val dokument = dokument(journalpostId, rinasakId, navRinasak.navRinasakUuid)
         navRinasakService.save(navRinasak)
-        navRinasakService.save(dokument)
+        dokument?.let { navRinasakService.save(it) }
         caseStoreRecordRepository.save(record.copy(syncStatus = SYNCED))
     }
 

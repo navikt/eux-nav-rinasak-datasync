@@ -4,9 +4,9 @@ import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import eux.nav.rinasak.datasync.persistence.InitiellFagsakRepository
 import eux.nav.rinasak.datasync.persistence.NavRinasakRepository
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ResetNavRinasakDatasyncService(
@@ -15,8 +15,9 @@ class ResetNavRinasakDatasyncService(
     val initiellFagsakRepository: InitiellFagsakRepository,
     val caseStoreRecordRepository: CaseStoreRecordRepository,
 ) {
-    val log: Logger = LoggerFactory.getLogger(ResetNavRinasakDatasyncService::class.java)
+    val log = KotlinLogging.logger {}
 
+    @Transactional
     fun reset() {
         dokumentRepository.deleteAll()
         initiellFagsakRepository.deleteAll()
@@ -24,8 +25,8 @@ class ResetNavRinasakDatasyncService(
         try {
             caseStoreRecordRepository.resetSyncStatus()
         } catch (e: RuntimeException) {
-            log.error("Feilet under resetting av sync status for case store records", e)
+            log.error(e) { "Feilet under resetting av sync status for case store records" }
         }
-        log.info("Nav rinasak datasync resatt")
+        log.info { "Nav rinasak datasync resatt" }
     }
 }

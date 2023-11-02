@@ -39,7 +39,7 @@ class CaseStoreRecordsStagingService(
             rinasakId = rinasakId,
             overstyrtEnhetsnummer = records.overstyrtEnhetsnummer()
         )
-        val fnr = euxRinaApiClient.fnrOrNull(rinasakId)
+        val fnr = euxRinaApiClient.fnrOrNull(rinasakId)?.trim()
         if (fnr != null)
             stageCaseStoreRecordWithMissingJournalpostId(
                 safSak = safClient.safSakOrNull(fnr, fagsakId),

@@ -16,3 +16,10 @@ client:
   saf:
     endpoint: https://saf-q2.dev-fss-pub.nais.io
     scope: api://dev-fss.teamdokumenthandtering.saf/.default
+resources:
+  limits:
+    cpu: "2"
+    memory: 8Gi
+  requests:
+    cpu: 250m
+    memory: 1Gi

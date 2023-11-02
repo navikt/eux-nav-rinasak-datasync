@@ -34,7 +34,7 @@ class NavRinasakClient(
         val entity: ResponseEntity<NavRinasakSearchResponseType> = euxNavRinasakRestTemplate
             .postForEntity("${euxNavRinasakUrl}/api/v1/rinasaker/finn", request)
         if (!entity.statusCode.is2xxSuccessful)
-            throw RuntimeException("Kunne ikke lagre case: $euxNavRinasakUrl")
+            throw RuntimeException("Søk feilet: $euxNavRinasakUrl")
         return entity.body!!
     }
 }

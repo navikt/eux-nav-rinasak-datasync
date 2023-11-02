@@ -20,6 +20,7 @@ class SendToNavRinasakIntegrationService(
     val initiellFagsakRepository: InitiellFagsakRepository,
     val dokumentRepository: DokumentRepository,
     val navRinasakClient: NavRinasakClient,
+    val navRinasakDokumentClient: NavRinasakDokumentClient
 ) {
     val log: Logger = LoggerFactory.getLogger(SendToNavRinasakIntegrationService::class.java)
 
@@ -64,7 +65,24 @@ class SendToNavRinasakIntegrationService(
         dokumenterPending: Map<UUID, List<Dokument>>
     ) {
         log.info("Oppdaterer NAV Rinasak ${navRinasak.rinasakId} ...")
+        val dokumenterPendingList = dokumenterPending[navRinasak.navRinasakUuid] ?: emptyList()
+        dokumenterPendingList
+            .filterNot { harDokument(it, dokumenter ?: emptyList()) }
+            .forEach {
+                log.info("Legger til dokument: ${it.sedId} : ${it.sedVersjon} i sak: ${navRinasak.rinasakId}")
+                navRinasakDokumentClient.opprettNavRinasakDokument(
+                    navRinasak.rinasakId, DokumentCreateType(
+                        sedId = it.sedId,
+                        sedVersjon = it.sedVersjon,
+                        sedType = it.sedType,
+                        dokumentInfoId = it.dokumentInfoId
+                    )
+                )
+            }
     }
+
+    fun harDokument(dokumentType: Dokument, dokumentTypeList: List<DokumentType>) =
+        dokumentTypeList.any { it.sedId == dokumentType.sedId && it.sedVersjon == dokumentType.sedVersjon }
 }
 
 fun NavRinasak.toNavRinasakCreateType(

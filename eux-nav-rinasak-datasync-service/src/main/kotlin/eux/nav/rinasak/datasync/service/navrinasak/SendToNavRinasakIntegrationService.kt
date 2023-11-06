@@ -8,8 +8,7 @@ import eux.nav.rinasak.datasync.model.SyncStatus.SYNCED
 import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import eux.nav.rinasak.datasync.persistence.InitiellFagsakRepository
 import eux.nav.rinasak.datasync.persistence.NavRinasakRepository
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging.logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -22,7 +21,7 @@ class SendToNavRinasakIntegrationService(
     val navRinasakClient: NavRinasakClient,
     val navRinasakDokumentClient: NavRinasakDokumentClient
 ) {
-    val log: Logger = LoggerFactory.getLogger(SendToNavRinasakIntegrationService::class.java)
+    val log = logger {}
 
     @Transactional
     fun sync(
@@ -32,7 +31,7 @@ class SendToNavRinasakIntegrationService(
     ) {
         navRinasakClient
             .finnNavRinasakOrNull(navRinasak.rinasakId)
-            ?.oppdaterNavRinasak(navRinasak, initielleFagsakerPending, dokumenterPending)
+            ?.oppdaterNavRinasak(navRinasak, dokumenterPending)
             ?: lagNavRinasak(navRinasak, initielleFagsakerPending, dokumenterPending)
     }
 
@@ -41,7 +40,7 @@ class SendToNavRinasakIntegrationService(
         initielleFagsakerPending: Map<UUID, InitiellFagsak>,
         dokumenterPending: Map<UUID, List<Dokument>>
     ) {
-        log.info("Oppretter ny NAV Rinasak ${navRinasak.rinasakId} ...")
+        log.info { "Oppretter ny NAV Rinasak ${navRinasak.rinasakId} ..." }
         val navRinasakInitiellFagsakCreateType = initielleFagsakerPending[navRinasak.navRinasakUuid]
             ?.toNavRinasakInitiellFagsakCreateType()
         val navRinasakDokumentCreateTypes = dokumenterPending[navRinasak.navRinasakUuid]
@@ -56,20 +55,19 @@ class SendToNavRinasakIntegrationService(
         dokumenterPending[navRinasak.navRinasakUuid]
             ?.forEach { dokumentRepository.save(it.copy(syncStatus = SYNCED)) }
         navRinasakClient.opprettNavRinasak(navRinasakCreateType)
-        log.info("NAV Rinasak opprettet: ${navRinasak.rinasakId}")
+        log.info { "NAV Rinasak opprettet: ${navRinasak.rinasakId}" }
     }
 
     fun NavRinasakType.oppdaterNavRinasak(
         navRinasak: NavRinasak,
-        initielleFagsakerPending: Map<UUID, InitiellFagsak>,
         dokumenterPending: Map<UUID, List<Dokument>>
     ) {
-        log.info("Oppdaterer NAV Rinasak ${navRinasak.rinasakId} ...")
+        log.info { "Oppdaterer NAV Rinasak ${navRinasak.rinasakId} ..." }
         val dokumenterPendingList = dokumenterPending[navRinasak.navRinasakUuid] ?: emptyList()
         dokumenterPendingList
             .filterNot { harDokument(it, dokumenter ?: emptyList()) }
             .forEach {
-                log.info("Legger til dokument: ${it.sedId} : ${it.sedVersjon} i sak: ${navRinasak.rinasakId}")
+                log.info { "Legger til dokument: ${it.sedId} : ${it.sedVersjon} i sak: ${navRinasak.rinasakId}" }
                 navRinasakDokumentClient.opprettNavRinasakDokument(
                     navRinasak.rinasakId, DokumentCreateType(
                         sedId = it.sedId,
@@ -79,6 +77,9 @@ class SendToNavRinasakIntegrationService(
                     )
                 )
             }
+        navRinasakRepository.save(navRinasak.copy(syncStatus = SYNCED))
+        dokumenterPending[navRinasak.navRinasakUuid]
+            ?.forEach { dokumentRepository.save(it.copy(syncStatus = SYNCED)) }
     }
 
     fun harDokument(dokumentType: Dokument, dokumentTypeList: List<DokumentType>) =

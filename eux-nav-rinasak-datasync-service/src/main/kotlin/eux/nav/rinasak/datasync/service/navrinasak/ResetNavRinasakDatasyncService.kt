@@ -4,7 +4,7 @@ import eux.nav.rinasak.datasync.persistence.CaseStoreRecordRepository
 import eux.nav.rinasak.datasync.persistence.DokumentRepository
 import eux.nav.rinasak.datasync.persistence.InitiellFagsakRepository
 import eux.nav.rinasak.datasync.persistence.NavRinasakRepository
-import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging.logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,7 +15,7 @@ class ResetNavRinasakDatasyncService(
     val initiellFagsakRepository: InitiellFagsakRepository,
     val caseStoreRecordRepository: CaseStoreRecordRepository,
 ) {
-    val log = KotlinLogging.logger {}
+    val log = logger {}
 
     @Transactional
     fun reset() {

@@ -47,13 +47,14 @@ class CaseStoreRecordsStagingService(
                 fnr = fnr,
                 records = records
             )
-            !validFnr(fnr) -> records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = INVALID_FNR)) }
+            fnr != null && !validFnr(fnr) ->
+                records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = INVALID_FNR)) }
             else -> records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = RINASAK_NOT_FOUND)) }
         }
     }
 
-    fun validFnr(fnr: String?): Boolean =
-        if (fnr?.matches(Regex("""^\d{11}$""")) == true) {
+    fun validFnr(fnr: String): Boolean =
+        if (fnr.matches(Regex("""^\d{11}$"""))) {
             true
         } else {
             log.error("Invalid fnr: $fnr")

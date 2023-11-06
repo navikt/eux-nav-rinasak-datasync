@@ -44,6 +44,7 @@ class StatsService(
             caseStoreRecordSyncedCount = caseStoreRecordRepository.countBySyncStatus(SYNCED),
             caseStoreRecordRinasakNotFoundCount = caseStoreRecordRepository.countBySyncStatus(RINASAK_NOT_FOUND),
             caseStoreRecordFagsakNotFoundCount = caseStoreRecordRepository.countBySyncStatus(FAGSAK_NOT_FOUND),
+            caseStoreRecordInvalidFnrCount = caseStoreRecordRepository.countBySyncStatus(INVALID_FNR),
             inEuxCaseStoreCount = exuCaseStoreStats.numberOfRecords,
             inEuxCaseStorePendingCount = exuCaseStoreStats.numberOfPendingRecords,
             inEuxCaseStoreSyncedCount = exuCaseStoreStats.numberOfSyncedRecords,

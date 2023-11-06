@@ -22,6 +22,8 @@ class CaseStoreRecordsService(
 
     fun casesFagsakNotFound(): List<CaseStoreRecord> = repository.findAllBySyncStatus(FAGSAK_NOT_FOUND)
 
+    fun casesInvalidFnr(): List<CaseStoreRecord> = repository.findAllBySyncStatus(INVALID_FNR)
+
     fun casesRinasakNotFound(): List<CaseStoreRecord> = repository.findAllBySyncStatus(RINASAK_NOT_FOUND)
 
     fun EuxCaseStoreCase.toCaseStoreRecord() =

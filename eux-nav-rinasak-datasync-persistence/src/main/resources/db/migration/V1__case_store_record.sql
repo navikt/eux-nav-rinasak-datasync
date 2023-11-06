@@ -7,7 +7,7 @@ CREATE TABLE case_store_record
     fagsak_tema            varchar(100),
     overstyrt_enhetsnummer varchar(32),
     journalpost_id         varchar(32),
-    sync_status            varchar(32),
+    sync_status            varchar(36),
     buc_id                 uuid,
     opprettet_bruker       varchar(100),
     opprettet_dato         timestamp

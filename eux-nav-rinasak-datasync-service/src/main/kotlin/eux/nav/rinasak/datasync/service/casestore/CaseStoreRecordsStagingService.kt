@@ -40,16 +40,25 @@ class CaseStoreRecordsStagingService(
             overstyrtEnhetsnummer = records.overstyrtEnhetsnummer()
         )
         val fnr = euxRinaApiClient.fnrOrNull(rinasakId)?.trim()
-        if (fnr != null)
-            stageCaseStoreRecordWithMissingJournalpostId(
+        when {
+            fnr != null && validFnr(fnr) -> stageCaseStoreRecordWithMissingJournalpostId(
                 safSak = safClient.safSakOrNull(fnr, fagsakId),
                 navRinasak = navRinasak,
                 fnr = fnr,
                 records = records
             )
-        else
-            records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = RINASAK_NOT_FOUND)) }
+            !validFnr(fnr) -> records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = INVALID_FNR)) }
+            else -> records.forEach { caseStoreRecordRepository.save(it.copy(syncStatus = RINASAK_NOT_FOUND)) }
+        }
     }
+
+    fun validFnr(fnr: String?): Boolean =
+        if (fnr?.matches(Regex("""^\d{11}$""")) == true) {
+            true
+        } else {
+            log.error("Invalid fnr: $fnr")
+            false
+        }
 
     private fun stageCaseStoreRecordWithMissingJournalpostId(
         safSak: SafSak?,

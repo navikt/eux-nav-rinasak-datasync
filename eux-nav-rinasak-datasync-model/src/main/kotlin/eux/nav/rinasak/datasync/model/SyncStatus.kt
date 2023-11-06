@@ -5,4 +5,5 @@ enum class SyncStatus {
     SYNCED,
     RINASAK_NOT_FOUND,
     FAGSAK_NOT_FOUND,
+    INVALID_FNR,
 }

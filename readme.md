@@ -10,7 +10,7 @@ Overføring av data fra `eux-case-store` til `eux-nav-rinasak`
 
 #### Avhengigheter
 
-* JDK 17
+* JDK 21
 
 #### Kjøring av tester lokalt
 

@@ -67,20 +67,25 @@ class SendToNavRinasakIntegrationService(
         dokumenterPendingList
             .filterNot { harDokument(it, dokumenter ?: emptyList()) }
             .distinctBy { it.sedId to it.sedVersjon }
-            .forEach {
-                log.info { "Legger til dokument: ${it.sedId} : ${it.sedVersjon} i sak: ${navRinasak.rinasakId}" }
-                navRinasakDokumentClient.opprettNavRinasakDokument(
-                    navRinasak.rinasakId, DokumentCreateType(
-                        sedId = it.sedId,
-                        sedVersjon = it.sedVersjon,
-                        sedType = it.sedType,
-                        dokumentInfoId = it.dokumentInfoId
-                    )
-                )
-            }
+            .forEach { opprettNavRinasakDokument(it, navRinasak.rinasakId) }
         navRinasakRepository.save(navRinasak.copy(syncStatus = SYNCED))
         dokumenterPending[navRinasak.navRinasakUuid]
             ?.forEach { dokumentRepository.save(it.copy(syncStatus = SYNCED)) }
+    }
+
+    fun opprettNavRinasakDokument(
+        dokument: Dokument,
+        rinasakId: Int,
+    ) {
+        log.info { "Legger til dokument: ${dokument.sedId} : ${dokument.sedVersjon} i sak: $rinasakId" }
+        navRinasakDokumentClient.opprettNavRinasakDokument(
+            rinasakId, DokumentCreateType(
+                sedId = dokument.sedId,
+                sedVersjon = dokument.sedVersjon,
+                sedType = dokument.sedType,
+                dokumentInfoId = dokument.dokumentInfoId
+            )
+        )
     }
 
     fun harDokument(dokumentType: Dokument, dokumentTypeList: List<DokumentType>) =

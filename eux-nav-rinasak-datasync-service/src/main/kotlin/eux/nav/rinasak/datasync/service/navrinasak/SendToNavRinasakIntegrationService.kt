@@ -66,6 +66,7 @@ class SendToNavRinasakIntegrationService(
         val dokumenterPendingList = dokumenterPending[navRinasak.navRinasakUuid] ?: emptyList()
         dokumenterPendingList
             .filterNot { harDokument(it, dokumenter ?: emptyList()) }
+            .distinctBy { it.sedId to it.sedVersjon }
             .forEach {
                 log.info { "Legger til dokument: ${it.sedId} : ${it.sedVersjon} i sak: ${navRinasak.rinasakId}" }
                 navRinasakDokumentClient.opprettNavRinasakDokument(

@@ -2,8 +2,10 @@ package eux.nav.rinasak.datasync.integration.navrinasak
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestClient
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForEntity
 
@@ -36,5 +38,15 @@ class NavRinasakClient(
         if (!entity.statusCode.is2xxSuccessful)
             throw RuntimeException("Søk feilet: $euxNavRinasakUrl")
         return entity.body!!
+    }
+
+    fun oppdater(navRinasakPatchType: NavRinasakPatchType) {
+        RestClient.create(euxNavRinasakRestTemplate)
+            .patch()
+            .uri("${euxNavRinasakUrl}/api/v1/rinasaker")
+            .contentType(APPLICATION_JSON)
+            .body(navRinasakPatchType)
+            .retrieve()
+            .toBodilessEntity()
     }
 }

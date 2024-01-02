@@ -19,5 +19,7 @@ data class NavRinasak(
     val opprettetBruker: String = "datasync",
     val opprettetDato: LocalDateTime = now(),
     @Enumerated(EnumType.STRING)
-    val syncStatus: SyncStatus = PENDING
+    val syncStatus: SyncStatus = PENDING,
+    @Enumerated(EnumType.STRING)
+    val overstyrtEnhetsnummerSyncStatus: SyncStatus = PENDING
 )

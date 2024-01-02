@@ -48,6 +48,14 @@ class StatsService(
             inEuxCaseStoreCount = exuCaseStoreStats.numberOfRecords,
             inEuxCaseStorePendingCount = exuCaseStoreStats.numberOfPendingRecords,
             inEuxCaseStoreSyncedCount = exuCaseStoreStats.numberOfSyncedRecords,
+            overstyrtEnhetsnummerSyncNullCount = navRinasakRepository
+                .countByOverstyrtEnhetsnummerSyncStatusIsNull(),
+            overstyrtEnhetsnummerSyncPendingCount = navRinasakRepository
+                .countByOverstyrtEnhetsnummerSyncStatus(PENDING),
+            overstyrtEnhetsnummerSyncSyncedCount = navRinasakRepository
+                .countByOverstyrtEnhetsnummerSyncStatus(SYNCED),
+            overstyrtEnhetsnummerSyncFailedCount = navRinasakRepository
+                .countByOverstyrtEnhetsnummerSyncStatus(FAILED),
         )
     }
 }

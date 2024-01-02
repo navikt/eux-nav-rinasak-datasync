@@ -72,6 +72,12 @@
             <td th:text="${stats.inEuxCaseStorePendingCount}"></td>
             <td th:text="${stats.inEuxCaseStoreSyncedCount}"></td>
         </tr>
+        <tr>
+            <td>Overstyrt enhetsnummer sync</td>
+            <td th:text="${stats.inEuxCaseStoreCount}"></td>
+            <td th:text="${stats.overstyrtEnhetsnummerSyncPendingCount + stats.getOverstyrtEnhetsnummerSyncNullCount}"></td>
+            <td th:text="${stats.overstyrtEnhetsnummerSyncSyncedCount}"></td>
+        </tr>
         </tbody>
     </table>
     <p>Stats</p>
@@ -94,6 +100,14 @@
         <tr>
             <td>case store record - invalid fnr</td>
             <td th:text="${stats.caseStoreRecordInvalidFnrCount}"></td>
+        </tr>
+        <tr>
+            <td>Overstyrt enhetsnummer sync - pending</td>
+            <td th:text="${stats.overstyrtEnhetsnummerSyncFailedCount}"></td>
+        </tr>
+        <tr>
+            <td>Overstyrt enhetsnummer sync - failed</td>
+            <td th:text="${stats.overstyrtEnhetsnummerSyncFailedCount}"></td>
         </tr>
         </tbody>
     </table>

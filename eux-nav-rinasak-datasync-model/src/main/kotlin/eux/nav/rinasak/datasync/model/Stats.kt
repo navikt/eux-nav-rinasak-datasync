@@ -19,4 +19,8 @@ data class Stats(
     val inEuxCaseStorePendingCount: Long,
     val inEuxCaseStoreSyncedCount: Long,
     val caseStoreRecordInvalidFnrCount: Long,
+    val overstyrtEnhetsnummerSyncNullCount: Long,
+    val overstyrtEnhetsnummerSyncPendingCount: Long,
+    val overstyrtEnhetsnummerSyncFailedCount: Long,
+    val overstyrtEnhetsnummerSyncSyncedCount: Long,
 )

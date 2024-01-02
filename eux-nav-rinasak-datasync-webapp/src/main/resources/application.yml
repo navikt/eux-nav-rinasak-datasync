@@ -23,8 +23,8 @@ spring:
         order_inserts: true
 
   flyway:
-    clean-on-validation-error: true
-    clean-disabled: false
+    clean-on-validation-error: false
+    clean-disabled: true
 
   thymeleaf:
     cache: false

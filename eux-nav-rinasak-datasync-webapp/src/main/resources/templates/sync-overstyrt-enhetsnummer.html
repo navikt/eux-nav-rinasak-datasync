@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Overstyrt enhetsnummer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <p>Flytt av data</p>
+    <ul>
+        <li><a href="/populate-all-case-store-records">Stage 1: populate-all-case-store-records</a></li>
+        <li><a href="/populate-nav-rinasak">Stage 2: populate-nav-rinasak</a></li>
+        <li><a href="/send-to-nav-rinasak">Stage 3: send-to-nav-rinasak</a></li>
+    </ul>
+    <p>Tilbakestilling</p>
+    <ul>
+        <li><a href="/reset-case-store-sync-status">Stage 1: reset-case-store-sync-status</a></li>
+        <li><a href="/reset-case-store-records">Stage 1: reset-case-store-records</a></li>
+        <li><a href="/reset-nav-rinasak">Stage 2: reset-nav-rinasak</a></li>
+        <li><a href="/reset-send-to-nav-rinasak">Stage 3: reset-send-to-nav-rinasak</a></li>
+    </ul>
+    <p>Verktøy</p>
+    <ul>
+        <li><a href="/case-store-records">case-store-records</a></li>
+        <li><a href="/stats">stats</a></li>
+        <li><a href="/sandbox">sandbox</a></li>
+        <li><a href="/populate-case-store-records">populate-case-store-records (stage 1, delvis)</a></li>
+    </ul>
+</div>
+<div class="container">
+    <h1>Overstyrt enhetsnummer sync</h1>
+    <form method="post">
+        <button type="submit">Sync overstyrt enhetsnummer</button>
+    </form>
+</div>
+</body>
+</html>

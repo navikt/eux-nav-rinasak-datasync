@@ -11,17 +11,21 @@ import java.util.*
 @Repository
 interface NavRinasakRepository : JpaRepository<NavRinasak, UUID> {
     fun countBySyncStatus(syncStatus: SyncStatus): Long
-    fun findAllBySyncStatus(syncStatus: SyncStatus) : List<NavRinasak>
+    fun findAllBySyncStatus(syncStatus: SyncStatus): List<NavRinasak>
+    fun findByOverstyrtEnhetsnummerSyncStatus(syncStatus: SyncStatus): List<NavRinasak>
+    fun findByOverstyrtEnhetsnummerSyncStatusIsNull(): List<NavRinasak>
+    fun countByOverstyrtEnhetsnummerSyncStatusIsNull(): Long
+    fun countByOverstyrtEnhetsnummerSyncStatus(syncStatus: SyncStatus): Long
 }
 
 @Repository
 interface DokumentRepository : JpaRepository<Dokument, UUID> {
     fun countBySyncStatus(syncStatus: SyncStatus): Long
-    fun findAllBySyncStatus(syncStatus: SyncStatus) : List<Dokument>
+    fun findAllBySyncStatus(syncStatus: SyncStatus): List<Dokument>
 }
 
 @Repository
 interface InitiellFagsakRepository : JpaRepository<InitiellFagsak, UUID> {
     fun countBySyncStatus(syncStatus: SyncStatus): Long
-    fun findAllBySyncStatus(syncStatus: SyncStatus) : List<InitiellFagsak>
+    fun findAllBySyncStatus(syncStatus: SyncStatus): List<InitiellFagsak>
 }

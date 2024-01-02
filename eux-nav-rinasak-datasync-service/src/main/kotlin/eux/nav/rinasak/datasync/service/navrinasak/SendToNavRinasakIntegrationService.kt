@@ -98,6 +98,7 @@ fun NavRinasak.toNavRinasakCreateType(
 ) =
     NavRinasakCreateType(
         rinasakId = rinasakId,
+        overstyrtEnhetsnummer = overstyrtEnhetsnummer,
         initiellFagsak = navRinasakInitiellFagsakCreateType,
         dokumenter = navRinasakDokumentCreateTypes
     )

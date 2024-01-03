@@ -14,7 +14,7 @@ class SyncOverstyrtEnhetsnummerController(
     val overstyrtEnhetsnummerService: OverstyrtEnhetsnummerService,
 ) {
 
-    @GetMapping("/populate-all-case-store-records")
+    @GetMapping("/sync-overstyrt-enhetsnummer")
     fun populateAllCaseStoreRecords(
         model: Model,
     ): String {
@@ -22,7 +22,7 @@ class SyncOverstyrtEnhetsnummerController(
         return "sync-overstyrt-enhetsnummer"
     }
 
-    @PostMapping("/populate-all-case-store-records")
+    @PostMapping("/sync-overstyrt-enhetsnummer")
     fun populateALlCaseStoreRecords(
         @RequestParam("inputNumber") inputNumber: Int?,
         model: Model

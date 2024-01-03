@@ -23,6 +23,12 @@ class OverstyrtEnhetsnummerService(
             .filterNot { it.harRiktigOverstyrtEnhetsnummer() }
             .also { log.info { "Har ikke riktig enhetsnummer: ${it.size}" } }
             .forEach { it.oppdaterEnhetsnummer() }
+        navRinasakRepository
+            .findByOverstyrtEnhetsnummerSyncStatus(FAILED)
+            .also { log.info { "Pending overstyrt enhetsnummer by FAILED: ${it.size}" } }
+            .filterNot { it.harRiktigOverstyrtEnhetsnummer() }
+            .also { log.info { "Har ikke riktig enhetsnummer by FAILED: ${it.size}" } }
+            .forEach { it.oppdaterEnhetsnummer() }
     }
 
     fun NavRinasak.harRiktigOverstyrtEnhetsnummer(): Boolean {

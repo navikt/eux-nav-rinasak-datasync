@@ -34,6 +34,9 @@ spring:
       cache:
         period: 0
 
+  main:
+    banner-mode: "off"
+
 no.nav.security.jwt:
   issuer:
     azuread:

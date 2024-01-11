@@ -18,7 +18,7 @@ class OverstyrtEnhetsnummerService(
 
     fun sync() {
         navRinasakRepository
-            .findByOverstyrtEnhetsnummerSyncStatusIsNull()
+            .findByOverstyrtEnhetsnummerSyncStatusIsNullAndOverstyrtEnhetsnummerIsNotNull()
             .also { log.info { "Pending overstyrt enhetsnummer by null: ${it.size}" } }
             .filterNot { it.harRiktigOverstyrtEnhetsnummer() }
             .also { log.info { "Har ikke riktig enhetsnummer: ${it.size}" } }

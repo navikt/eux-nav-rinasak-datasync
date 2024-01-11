@@ -21,5 +21,5 @@ data class NavRinasak(
     @Enumerated(EnumType.STRING)
     val syncStatus: SyncStatus = PENDING,
     @Enumerated(EnumType.STRING)
-    val overstyrtEnhetsnummerSyncStatus: SyncStatus = PENDING
+    val overstyrtEnhetsnummerSyncStatus: SyncStatus? = PENDING
 )

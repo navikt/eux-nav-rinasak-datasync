@@ -11,6 +11,7 @@ import eux.nav.rinasak.datasync.persistence.NavRinasakRepository
 import io.github.oshai.kotlinlogging.KotlinLogging.logger
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.client.HttpClientErrorException
 import java.util.*
 
 @Service
@@ -78,14 +79,22 @@ class SendToNavRinasakIntegrationService(
         rinasakId: Int,
     ) {
         log.info { "Legger til dokument: ${dokument.sedId} : ${dokument.sedVersjon} i sak: $rinasakId" }
-        navRinasakDokumentClient.opprettNavRinasakDokument(
-            rinasakId, DokumentCreateType(
-                sedId = dokument.sedId,
-                sedVersjon = dokument.sedVersjon,
-                sedType = dokument.sedType,
-                dokumentInfoId = dokument.dokumentInfoId
+        try {
+            navRinasakDokumentClient.opprettNavRinasakDokument(
+                rinasakId, DokumentCreateType(
+                    sedId = dokument.sedId,
+                    sedVersjon = dokument.sedVersjon,
+                    sedType = dokument.sedType,
+                    dokumentInfoId = dokument.dokumentInfoId
+                )
             )
-        )
+        } catch (e: HttpClientErrorException) {
+            if (e.statusCode.value() == 409) {
+                log.error { "Dokumentet finnes alt: ${dokument.sedId}, ${dokument.sedVersjon}" }
+            } else {
+                throw e
+            }
+        }
     }
 
     fun harDokument(dokumentType: Dokument, dokumentTypeList: List<DokumentType>) =

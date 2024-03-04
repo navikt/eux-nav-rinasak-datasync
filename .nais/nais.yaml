@@ -43,7 +43,6 @@ spec:
     requests:
       cpu: "{{ resources.requests.cpu }}"
       memory: {{ resources.requests.memory }}
-  progressDeadlineSeconds: 120
   azure:
     application:
       enabled: true

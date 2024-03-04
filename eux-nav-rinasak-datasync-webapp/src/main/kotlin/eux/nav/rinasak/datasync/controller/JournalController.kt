@@ -1,6 +1,6 @@
 package eux.nav.rinasak.datasync.controller
 
-import eux.nav.rinasak.datasync.service.enhet.OverstyrtEnhetsnummerService
+import eux.nav.rinasak.datasync.service.journal.JournalService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.stereotype.Controller
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam
 @Unprotected
 @Controller
 class JournalController(
-    val overstyrtEnhetsnummerService: OverstyrtEnhetsnummerService,
+    val journalService: JournalService
 ) {
 
     val log = KotlinLogging.logger {}
@@ -27,10 +27,11 @@ class JournalController(
 
     @PostMapping("/journal")
     fun journal(
-        @RequestParam journalposter: String?,
+        @RequestParam journalposter: String,
         model: Model
     ): String {
         log.info { "number: $journalposter" }
+        journalService.journal(journalposter.split(","))
         return "journal"
     }
 }

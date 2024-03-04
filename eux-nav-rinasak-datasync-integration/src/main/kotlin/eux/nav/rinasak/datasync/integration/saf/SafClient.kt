@@ -134,6 +134,10 @@ fun journalpostQuery(journalpostId: String) = GraphQlQuery(
                 tittel
                 brevkode
               }
+              tilleggsopplysninger {
+                nokkel
+                verdi
+              }
           }
         }""".trimIndent()
 )

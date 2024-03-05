@@ -27,6 +27,6 @@ class DokarkivClient(
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
             .body(dokarkivJournalpostOppdatering)
-        dokarkivRestTemplate.exchange(request, DokarkivJournalpostOppdateringRespons::class.java);
+        dokarkivRestTemplate.exchange(request, DokarkivJournalpostOppdateringRespons::class.java)
     }
 }

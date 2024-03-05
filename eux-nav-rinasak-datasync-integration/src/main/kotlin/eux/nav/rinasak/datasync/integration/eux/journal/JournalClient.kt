@@ -1,10 +1,11 @@
 package eux.nav.rinasak.datasync.integration.eux.journal
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.ResponseEntity
+import org.springframework.http.MediaType
+import org.springframework.http.RequestEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
-import org.springframework.web.client.patchForObject
+import java.net.URI
 
 @Component
 class JournalClient(
@@ -14,10 +15,10 @@ class JournalClient(
 ) {
 
     fun ferdigstill(journalpostId: String) {
-        val entity: ResponseEntity<Void> = euxJournalRestTemplate
-            .patchForObject("${journalUrl}/api/v1/journalposter/$journalpostId/ferdigstill")
-        if (!entity.statusCode.is2xxSuccessful)
-            throw RuntimeException("Kunne ikke ferdigstille: $journalUrl")
+        val request = RequestEntity
+            .patch(URI("${journalUrl}/api/v1/journalposter/$journalpostId/ferdigstill"))
+            .accept(MediaType.APPLICATION_JSON)
+            .build()
+        euxJournalRestTemplate.exchange(request, Void::class.java);
     }
-
 }

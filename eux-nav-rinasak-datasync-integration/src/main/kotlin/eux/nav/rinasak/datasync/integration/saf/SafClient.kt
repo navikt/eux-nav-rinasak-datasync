@@ -76,7 +76,6 @@ class SafClient(
         val response = safRestTemplate
             .exchange(request, SafJournalpostRoot::class.java)
         return if (response.statusCode.is2xxSuccessful) {
-            log.info("SAF (test): {}", response.body)
             response
                 .body
                 ?.data

@@ -1,5 +1,10 @@
 package eux.nav.rinasak.datasync.service.journal
 
+import eux.nav.rinasak.datasync.integration.dokarkiv.client.DokarkivClient
+import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivBruker
+import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivBrukerType
+import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivJournalpostOppdatering
+import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivSakOppdatering
 import eux.nav.rinasak.datasync.integration.eux.journal.JournalClient
 import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxRinaApiClient
 import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxSedOversiktV3
@@ -22,7 +27,8 @@ class JournalService(
     val euxRinaApiClient: EuxRinaApiClient,
     val navRinasakClient: NavRinasakClient,
     val navRinasakDokumentClient: NavRinasakDokumentClient,
-    val journalClient: JournalClient
+    val journalClient: JournalClient,
+    val dokarkivClient: DokarkivClient
 ) {
 
     val log = KotlinLogging.logger {}
@@ -56,6 +62,10 @@ class JournalService(
                     )
                 }
         }
+        val eksisterendeAnnetDokument = navRinasak!!.dokumenter!!.first()
+        val eksisterendeJournalpost = safClient
+            .firstTilknyttetJournalpostOrNull(eksisterendeAnnetDokument.dokumentInfoId!!)!!
+        journalpost.oppdater(eksisterendeJournalpost)
         ferdigstill(journalpost.journalpostId)
         log.info { "Ferdigstilte journalpostId=${journalpost.journalpostId}" }
     }
@@ -109,4 +119,26 @@ class JournalService(
             log.error(e) { "Kunne ikke hente rinaSakId for journalpostId=$journalpostId" }
             throw e
         }
+
+    fun SafJournalpost.oppdater(eksisterendeJournalpost: SafJournalpost) {
+        log.info { "Oppdaterer $journalpostId med utgangspunkt i ${eksisterendeJournalpost.journalpostId}" }
+        val eksisterendeSak = eksisterendeJournalpost.sak!!
+        val eksisterendeBruker = eksisterendeJournalpost.bruker!!
+        val dokarkivBruker = DokarkivBruker(
+            id = eksisterendeBruker.id,
+            idType = DokarkivBrukerType.valueOf(eksisterendeBruker.type)
+        )
+        val dokarkivSak = DokarkivSakOppdatering(
+            sakstype = eksisterendeSak.sakstype!!,
+            fagsaksystem = eksisterendeSak.fagsaksystem!!,
+            fagsakId = eksisterendeSak.fagsakId!!
+        )
+        val dokarkivOppdatering = DokarkivJournalpostOppdatering(
+            sak = dokarkivSak,
+            bruker = dokarkivBruker,
+            tema = eksisterendeSak.tema!!
+        )
+        dokarkivClient.oppdater(journalpostId, dokarkivOppdatering)
+        log.info { "Journalpost oppdatert journalpostId=$journalpostId" }
+    }
 }

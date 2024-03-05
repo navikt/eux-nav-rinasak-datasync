@@ -132,7 +132,9 @@ class JournalService(
         val dokarkivSak = DokarkivSakOppdatering(
             sakstype = eksisterendeSak.sakstype!!,
             fagsaksystem = eksisterendeSak.fagsaksystem!!,
-            fagsakId = eksisterendeSak.fagsakId!!
+            fagsakId = eksisterendeSak.fagsakId
+                ?: eksisterendeSak.arkivsaksnummer
+                ?: throw RuntimeException("${eksisterendeJournalpost.journalpostId} har ikke id/nr")
         )
         val dokarkivOppdatering = DokarkivJournalpostOppdatering(
             sak = dokarkivSak,

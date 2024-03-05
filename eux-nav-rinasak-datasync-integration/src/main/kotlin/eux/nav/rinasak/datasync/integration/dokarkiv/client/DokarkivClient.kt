@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
 @Component
-class NavRinasakClient(
-    @Value("\${endpoint.navrinasak}")
-    val euxNavRinasakUrl: String,
-    val euxNavRinasakRestTemplate: RestTemplate
+class DokarkivClient(
+    @Value("\${endpoint.dokarkiv}")
+    val euxDokarkivUrl: String,
+    val dokarkivRestTemplate: RestTemplate
 ) {
 
 }

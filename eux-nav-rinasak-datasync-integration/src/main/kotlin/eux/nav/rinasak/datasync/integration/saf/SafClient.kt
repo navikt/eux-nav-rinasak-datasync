@@ -76,6 +76,7 @@ class SafClient(
         val response = safRestTemplate
             .exchange(request, SafJournalpostRoot::class.java)
         return if (response.statusCode.is2xxSuccessful) {
+            log.info("SAF (test): {}", response.body)
             response
                 .body
                 ?.data
@@ -138,6 +139,18 @@ fun journalpostQuery(journalpostId: String) = GraphQlQuery(
                 nokkel
                 verdi
               }
+              sak {
+                tema
+                fagsakId
+                fagsaksystem
+                arkivsaksnummer
+                arkivsaksystem
+                sakstype
+              }
+              bruker {
+                id
+                type
+              }
           }
         }""".trimIndent()
 )
@@ -155,6 +168,22 @@ fun tilknyttedeJournalposterQuery(dokumentInfoId: String) = GraphQlQuery(
                 dokumentInfoId
                 tittel
                 brevkode
+              }
+              tilleggsopplysninger {
+                nokkel
+                verdi
+              }
+              sak {
+                tema
+                fagsakId
+                fagsaksystem
+                arkivsaksnummer
+                arkivsaksystem
+                sakstype
+              }
+              bruker {
+                id
+                type
               }
           }
         }""".trimIndent()

@@ -7,4 +7,6 @@ data class SafJournalpost(
     val eksternReferanseId: String = "",
     val dokumenter: List<SafDokument>,
     val tilleggsopplysninger: List<SafTilleggsopplysninger>,
+    val sak: SafSak,
+    val bruker: SafBruker,
 )

@@ -19,6 +19,9 @@ client:
   saf:
     endpoint: https://saf-q1.dev-fss-pub.nais.io
     scope: api://dev-fss.teamdokumenthandtering.saf/.default
+  dokarkiv:
+    endpoint: https://dokarkiv-q1.dev-fss-pub.nais.io
+    scope: api://dev-fss.teamdokumenthandtering.dokarkiv/.default
 resources:
   limits:
     cpu: "2"

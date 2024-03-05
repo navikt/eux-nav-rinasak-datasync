@@ -86,6 +86,20 @@ class IntegrationConfig {
             .build()
     }
 
+    @Bean
+    fun dokarkivRestTemplate(
+        restTemplateBuilder: RestTemplateBuilder,
+        clientConfigurationProperties: ClientConfigurationProperties,
+        oAuth2AccessTokenService: OAuth2AccessTokenService
+    ): RestTemplate {
+        val clientProperties: ClientProperties = clientConfigurationProperties
+            .registration["dokarkiv-credentials"]
+            ?: throw RuntimeException("could not find oauth2 client config for dokarkiv-credentials")
+        return restTemplateBuilder
+            .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
+            .build()
+    }
+
     private fun bearerTokenInterceptor(
         clientProperties: ClientProperties,
         oAuth2AccessTokenService: OAuth2AccessTokenService

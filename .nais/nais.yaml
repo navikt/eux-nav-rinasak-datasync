@@ -64,6 +64,9 @@ spec:
         - host: eux-rina-api-q1.dev-fss-pub.nais.io
         - host: eux-rina-api-q2.dev-fss-pub.nais.io
         - host: eux-rina-api.prod-fss-pub.nais.io
+        - host: dokarkiv.prod-fss-pub.nais.io
+        - host: dokarkiv-q1.dev-fss-pub.nais.io
+        - host: dokarkiv-q2.dev-fss-pub.nais.io
       rules:
         - application: eux-nav-rinasak-q1
         - application: eux-nav-rinasak-q2
@@ -92,3 +95,7 @@ spec:
       value: {{ client.saf.endpoint }}
     - name: CLIENT_SAF_SCOPE
       value: {{ client.saf.scope }}
+    - name: CLIENT_DOKARKIV_ENDPOINT
+      value: {{ client.dokarkiv.endpoint }}
+    - name: CLIENT_DOKARKIV_SCOPE
+      value: {{ client.dokarkiv.scope }}

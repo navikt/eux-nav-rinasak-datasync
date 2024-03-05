@@ -59,6 +59,20 @@ class IntegrationConfig {
     }
 
     @Bean
+    fun euxJournalRestTemplate(
+        restTemplateBuilder: RestTemplateBuilder,
+        clientConfigurationProperties: ClientConfigurationProperties,
+        oAuth2AccessTokenService: OAuth2AccessTokenService
+    ): RestTemplate {
+        val clientProperties: ClientProperties = clientConfigurationProperties
+            .registration["eux-journal-credentials"]
+            ?: throw RuntimeException("could not find oauth2 client config for eux-journal-credentials")
+        return restTemplateBuilder
+            .additionalInterceptors(bearerTokenInterceptor(clientProperties, oAuth2AccessTokenService))
+            .build()
+    }
+
+    @Bean
     fun safRestTemplate(
         restTemplateBuilder: RestTemplateBuilder,
         clientConfigurationProperties: ClientConfigurationProperties,

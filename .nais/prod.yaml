@@ -13,6 +13,9 @@ client:
   navrinasak:
     endpoint: http://eux-nav-rinasak
     scope: api://prod-gcp.eessibasis.eux-nav-rinasak/.default
+  journal:
+    endpoint: http://eux-journal
+    scope: api://prod-gcp.eessibasis.eux-journal/.default
   saf:
     endpoint: https://saf.prod-fss-pub.nais.io
     scope: api://prod-fss.teamdokumenthandtering.saf/.default

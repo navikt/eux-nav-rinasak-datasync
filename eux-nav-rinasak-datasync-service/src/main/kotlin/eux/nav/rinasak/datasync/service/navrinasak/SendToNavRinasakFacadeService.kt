@@ -47,12 +47,12 @@ class SendToNavRinasakFacadeService(
             log.error("ugyldig sedId: $sedId", e)
             false
         }
+}
 
-    fun uuid(uuidWithoutDash: String): UUID =
-        fromString(uuidString(uuidWithoutDash = uuidWithoutDash))
+fun uuid(uuidWithoutDash: String): UUID =
+    fromString(uuidString(uuidWithoutDash = uuidWithoutDash))
 
-    fun uuidString(uuidWithoutDash: String): String = with(uuidWithoutDash) {
-        listOf(substring(0, 8), substring(8, 12), substring(12, 16), substring(16, 20), substring(20, 32))
-            .joinToString(separator = "-")
-    }
+fun uuidString(uuidWithoutDash: String): String = with(uuidWithoutDash) {
+    listOf(substring(0, 8), substring(8, 12), substring(12, 16), substring(16, 20), substring(20, 32))
+        .joinToString(separator = "-")
 }

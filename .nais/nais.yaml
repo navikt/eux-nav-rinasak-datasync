@@ -68,6 +68,9 @@ spec:
         - application: eux-nav-rinasak-q1
         - application: eux-nav-rinasak-q2
         - application: eux-nav-rinasak
+        - application: eux-journal
+        - application: eux-journal-q1
+        - application: eux-journal-q2
   env:
     - name: CLIENT_CASESTORE_ENDPOINT
       value: {{ client.casestore.endpoint }}
@@ -81,6 +84,10 @@ spec:
       value: {{ client.navrinasak.endpoint }}
     - name: CLIENT_NAVRINASAK_SCOPE
       value: {{ client.navrinasak.scope }}
+    - name: CLIENT_JOURNAL_ENDPOINT
+      value: {{ client.journal.endpoint }}
+    - name: CLIENT_JOURNAL_SCOPE
+      value: {{ client.journal.scope }}
     - name: CLIENT_SAF_ENDPOINT
       value: {{ client.saf.endpoint }}
     - name: CLIENT_SAF_SCOPE

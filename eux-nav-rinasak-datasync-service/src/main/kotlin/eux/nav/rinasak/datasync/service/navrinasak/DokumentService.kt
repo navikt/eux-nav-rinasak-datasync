@@ -41,28 +41,29 @@ class DokumentService(
         )
     }
 
-    private fun tilSedId(eksternReferanseId: String): String {
-        return try {
-            eksternReferanseId
-                .split("_".toRegex())
-                .dropLastWhile { it.isEmpty() }
-                .toTypedArray()[1]
-        } catch (e: RuntimeException) {
-            val message = "Ugyldig format på ekstern referanse id $eksternReferanseId"
-            throw InvalidEksternReferanseIdException(message, e)
-        }
-    }
+}
 
-    private fun tilSedVersjon(eksternReferanseId: String): Int {
-        return try {
-            eksternReferanseId
-                .split("_".toRegex())
-                .dropLastWhile { it.isEmpty() }
-                .toTypedArray()[2]
-                .toInt()
-        } catch (e: RuntimeException) {
-            val message = "\"Ugyldig format på ekstern referanse id for sed versjon $eksternReferanseId"
-            throw InvalidEksternReferanseIdException(message, e)
-        }
+fun tilSedId(eksternReferanseId: String): String {
+    return try {
+        eksternReferanseId
+            .split("_".toRegex())
+            .dropLastWhile { it.isEmpty() }
+            .toTypedArray()[1]
+    } catch (e: RuntimeException) {
+        val message = "Ugyldig format på ekstern referanse id $eksternReferanseId"
+        throw InvalidEksternReferanseIdException(message, e)
+    }
+}
+
+fun tilSedVersjon(eksternReferanseId: String): Int {
+    return try {
+        eksternReferanseId
+            .split("_".toRegex())
+            .dropLastWhile { it.isEmpty() }
+            .toTypedArray()[2]
+            .toInt()
+    } catch (e: RuntimeException) {
+        val message = "\"Ugyldig format på ekstern referanse id for sed versjon $eksternReferanseId"
+        throw InvalidEksternReferanseIdException(message, e)
     }
 }

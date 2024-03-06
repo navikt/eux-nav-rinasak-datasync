@@ -107,10 +107,17 @@ class JournalService(
                 sedType = sedType,
                 dokumentInfoId = journalpost.dokumenter.first().dokumentInfoId
             )
-            navRinasakDokumentClient.opprettNavRinasakDokument(rinasakId, dokument)
+            tryOpprettNavRinasakDokument(rinasakId, dokument)
             log.info { "Opprettet dokument i rinasak $rinasakId for journalpostId ${journalpost.journalpostId}" }
         }
     }
+
+    fun tryOpprettNavRinasakDokument(rinasakId: Int, dokumentCreateType: DokumentCreateType) =
+        try {
+            navRinasakDokumentClient.opprettNavRinasakDokument(rinasakId, dokumentCreateType)
+        } catch (e: RuntimeException) {
+            log.warn { "Dokumentet finnes alt i NAV Rinasak: ${dokumentCreateType.dokumentInfoId}" }
+        }
 
     fun ferdigstill(journalpostId: String) {
         journalClient.ferdigstill(journalpostId)

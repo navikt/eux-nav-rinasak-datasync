@@ -14,6 +14,7 @@ import eux.nav.rinasak.datasync.integration.navrinasak.NavRinasakClient
 import eux.nav.rinasak.datasync.integration.navrinasak.NavRinasakDokumentClient
 import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.integration.saf.SafJournalpost
+import eux.nav.rinasak.datasync.integration.saf.SafSak
 import eux.nav.rinasak.datasync.service.mdc.clearMdc
 import eux.nav.rinasak.datasync.service.mdc.mdc
 import eux.nav.rinasak.datasync.service.navrinasak.tilSedId
@@ -142,11 +143,11 @@ class JournalService(
             id = eksisterendeBruker.id,
             idType = DokarkivBrukerType.valueOf(eksisterendeBruker.type)
         )
-        val dokarkivSak = DokarkivSakOppdatering(
-            sakstype = "GENERELL_SAK",
-            fagsaksystem = null,
-            fagsakId = null
-        )
+        val dokarkivSak =
+            when {
+                eksisterendeSak.sakstype == "GENERELL_SAK" -> dokarkivSakOppdateringGenerell()
+                else -> eksisterendeSak.dokarkivSakOppdateringFagsak()
+            }
         val dokarkivOppdatering = DokarkivJournalpostOppdatering(
             sak = dokarkivSak,
             bruker = dokarkivBruker,
@@ -155,4 +156,18 @@ class JournalService(
         dokarkivClient.oppdater(journalpostId, dokarkivOppdatering)
         log.info { "Journalpost oppdatert journalpostId=$journalpostId" }
     }
+
+    fun dokarkivSakOppdateringGenerell() =
+        DokarkivSakOppdatering(
+            sakstype = "GENERELL_SAK",
+            fagsaksystem = null,
+            fagsakId = null
+        )
+
+    fun SafSak.dokarkivSakOppdateringFagsak() =
+        DokarkivSakOppdatering(
+            sakstype = sakstype!!,
+            fagsaksystem = fagsaksystem,
+            fagsakId = fagsakId
+        )
 }

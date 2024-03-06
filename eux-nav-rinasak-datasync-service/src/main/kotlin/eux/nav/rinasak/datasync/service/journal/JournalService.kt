@@ -66,26 +66,23 @@ class JournalService(
         log.info { "Feilregistrerte $journalpostId" }
     }
 
-    fun SafJournalpost.journal(rinasak: NavRinasakType) {
-        val navRinasak = navRinasakClient.finnNavRinasakOrNull(rinasakId)
+    fun SafJournalpost.journal(navRinasak: NavRinasakType) {
         val eksisterendeNavRinasakDokument = navRinasak
-            ?.dokumenter
+            .dokumenter
             ?.firstOrNull()
-        if (eksisterendeNavRinasakDokument == null) {
+        if (eksisterendeNavRinasakDokument == null)
             log.info { "Ferdigstiller uten eksisterende dokument" }
-        } else {
-            euxRinaApiClient
-                .euxRinaSakOversikt(rinasakId)
-                .sedListe
-                .forEach {
-                    it.leggTilSedINavRinasak(
-                        eksisterendeDokumenter = navRinasak.dokumenter!!,
-                        journalpost = this,
-                        rinasakId = rinasakId
-                    )
-                }
-        }
-        val eksisterendeAnnetDokumentMedSak = navRinasak!!
+        euxRinaApiClient
+            .euxRinaSakOversikt(rinasakId)
+            .sedListe
+            .forEach {
+                it.leggTilSedINavRinasak(
+                    eksisterendeDokumenter = navRinasak.dokumenter ?: emptyList(),
+                    journalpost = this,
+                    rinasakId = rinasakId
+                )
+            }
+        val eksisterendeAnnetDokumentMedSak = navRinasakClient.finnNavRinasakOrNull(rinasakId)!!
             .dokumenter!!
             .mapNotNull { safClient.firstTilknyttetJournalpostOrNull(it.dokumentInfoId!!) }
             .first { it.sak != null }

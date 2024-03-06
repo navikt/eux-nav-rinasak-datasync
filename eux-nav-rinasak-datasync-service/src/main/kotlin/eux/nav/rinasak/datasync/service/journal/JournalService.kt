@@ -69,7 +69,6 @@ class JournalService(
                 .sedListe
                 .forEach {
                     it.leggTilSedINavRinasak(
-                        eksisterendeNavRinasakDokument = eksisterendeNavRinasakDokument,
                         eksisterendeDokumenter = navRinasak.dokumenter!!,
                         journalpost = journalpost,
                         rinasakId = rinasakId
@@ -86,7 +85,6 @@ class JournalService(
     }
 
     fun EuxSedOversiktV3.leggTilSedINavRinasak(
-        eksisterendeNavRinasakDokument: DokumentType,
         eksisterendeDokumenter: List<DokumentType>,
         journalpost: SafJournalpost,
         rinasakId: Int
@@ -97,7 +95,7 @@ class JournalService(
         val sedVersjonFraEksternReferanseId = tilSedVersjon(eksternReferanseId)
         val eksisterendeDokument = eksisterendeDokumenter
             .filter { UUID.fromString(it.sedId) == sedIdFraEksternReferanseIdUuid }
-            .find { it.sedVersjon == sedVersjonFraEksternReferanseId }
+            .firstOrNull { it.sedVersjon == sedVersjonFraEksternReferanseId }
         if (eksisterendeDokument != null) {
             log.info { "Dokument eksisterer allerede for journalpostId=${journalpost.journalpostId}" }
         } else {

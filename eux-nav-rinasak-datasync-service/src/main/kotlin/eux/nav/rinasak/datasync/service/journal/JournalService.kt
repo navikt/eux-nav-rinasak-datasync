@@ -14,6 +14,8 @@ import eux.nav.rinasak.datasync.integration.navrinasak.NavRinasakClient
 import eux.nav.rinasak.datasync.integration.navrinasak.NavRinasakDokumentClient
 import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.integration.saf.SafJournalpost
+import eux.nav.rinasak.datasync.service.mdc.clearMdc
+import eux.nav.rinasak.datasync.service.mdc.mdc
 import eux.nav.rinasak.datasync.service.navrinasak.tilSedId
 import eux.nav.rinasak.datasync.service.navrinasak.tilSedVersjon
 import eux.nav.rinasak.datasync.service.navrinasak.uuid
@@ -37,12 +39,23 @@ class JournalService(
         log.info { "Journalfører ${journalposter.size} journalposter..." }
         journalposter
             .mapNotNull { safJournalpost(it) }
-            .forEach { journal(it) }
+            .forEach { it.tryJournal() }
         log.info { "Journalføring ferdig" }
     }
 
+    fun SafJournalpost.tryJournal() =
+        try {
+            mdc(journalpostId = journalpostId)
+            journal(this)
+        } catch (e: RuntimeException) {
+            log.error(e) { "Kunne ikke journalføre $journalpostId" }
+        } finally {
+            clearMdc()
+        }
+
     fun journal(journalpost: SafJournalpost) {
         val rinasakId = journalpost.rinasakId()
+        mdc(rinasakId = rinasakId)
         val navRinasak = navRinasakClient.finnNavRinasakOrNull(rinasakId)
         val eksisterendeNavRinasakDokument = navRinasak
             ?.dokumenter

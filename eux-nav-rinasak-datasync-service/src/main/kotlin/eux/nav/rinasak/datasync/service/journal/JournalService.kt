@@ -8,10 +8,7 @@ import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivSakOppdaterin
 import eux.nav.rinasak.datasync.integration.eux.journal.JournalClient
 import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxRinaApiClient
 import eux.nav.rinasak.datasync.integration.eux.rinaapi.EuxSedOversiktV3
-import eux.nav.rinasak.datasync.integration.navrinasak.DokumentCreateType
-import eux.nav.rinasak.datasync.integration.navrinasak.DokumentType
-import eux.nav.rinasak.datasync.integration.navrinasak.NavRinasakClient
-import eux.nav.rinasak.datasync.integration.navrinasak.NavRinasakDokumentClient
+import eux.nav.rinasak.datasync.integration.navrinasak.*
 import eux.nav.rinasak.datasync.integration.saf.SafClient
 import eux.nav.rinasak.datasync.integration.saf.SafJournalpost
 import eux.nav.rinasak.datasync.integration.saf.SafSak
@@ -20,7 +17,7 @@ import eux.nav.rinasak.datasync.service.mdc.mdc
 import eux.nav.rinasak.datasync.service.navrinasak.tilSedId
 import eux.nav.rinasak.datasync.service.navrinasak.tilSedVersjon
 import eux.nav.rinasak.datasync.service.navrinasak.uuid
-import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging.logger
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -34,7 +31,7 @@ class JournalService(
     val dokarkivClient: DokarkivClient
 ) {
 
-    val log = KotlinLogging.logger {}
+    val log = logger {}
 
     fun journal(journalposter: List<String>) {
         log.info { "Journalfører ${journalposter.size} journalposter..." }
@@ -55,8 +52,21 @@ class JournalService(
         }
 
     fun journal(journalpost: SafJournalpost) {
-        val rinasakId = journalpost.rinasakId()
+        val rinasakId = journalpost.rinasakId
         mdc(rinasakId = rinasakId)
+        val navRinasak = navRinasakClient.finnNavRinasakOrNull(rinasakId)
+        if (navRinasak == null)
+            journalpost.feilregistrer()
+        else
+            journalpost.journal(navRinasak)
+    }
+
+    fun SafJournalpost.feilregistrer() {
+        journalClient.settStatusAvbryt(listOf(journalpostId))
+        log.info { "Feilregistrerte $journalpostId" }
+    }
+
+    fun SafJournalpost.journal(rinasak: NavRinasakType) {
         val navRinasak = navRinasakClient.finnNavRinasakOrNull(rinasakId)
         val eksisterendeNavRinasakDokument = navRinasak
             ?.dokumenter
@@ -70,7 +80,7 @@ class JournalService(
                 .forEach {
                     it.leggTilSedINavRinasak(
                         eksisterendeDokumenter = navRinasak.dokumenter!!,
-                        journalpost = journalpost,
+                        journalpost = this,
                         rinasakId = rinasakId
                     )
                 }
@@ -79,9 +89,9 @@ class JournalService(
             .dokumenter!!
             .mapNotNull { safClient.firstTilknyttetJournalpostOrNull(it.dokumentInfoId!!) }
             .first { it.sak != null }
-        journalpost.oppdater(eksisterendeAnnetDokumentMedSak)
-        ferdigstill(journalpost.journalpostId)
-        log.info { "Ferdigstilte journalpostId=${journalpost.journalpostId}" }
+        oppdater(eksisterendeAnnetDokumentMedSak)
+        ferdigstill(journalpostId)
+        log.info { "Ferdigstilte journalpostId=$journalpostId" }
     }
 
     fun EuxSedOversiktV3.leggTilSedINavRinasak(
@@ -129,16 +139,17 @@ class JournalService(
             null
         }
 
-    fun SafJournalpost.rinasakId() =
-        try {
-            tilleggsopplysninger
-                .first { it.nokkel == "rinaSakId" }
-                .verdi
-                .toInt()
-        } catch (e: RuntimeException) {
-            log.error(e) { "Kunne ikke hente rinaSakId for journalpostId=$journalpostId" }
-            throw e
-        }
+    val SafJournalpost.rinasakId
+        get() =
+            try {
+                tilleggsopplysninger
+                    .first { it.nokkel == "rinaSakId" }
+                    .verdi
+                    .toInt()
+            } catch (e: RuntimeException) {
+                log.error(e) { "Kunne ikke hente rinaSakId for journalpostId=$journalpostId" }
+                throw e
+            }
 
     fun SafJournalpost.oppdater(eksisterendeJournalpost: SafJournalpost) {
         log.info { "Oppdaterer $journalpostId med utgangspunkt i ${eksisterendeJournalpost.journalpostId}" }
@@ -159,7 +170,7 @@ class JournalService(
             tema = eksisterendeSak.tema!!
         )
         dokarkivClient.oppdater(journalpostId, dokarkivOppdatering)
-        log.info { "Journalpost oppdatert journalpostId=$journalpostId" }
+        log.info { "Journalpost oppdatert" }
     }
 
     fun dokarkivSakOppdateringGenerell() =

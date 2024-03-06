@@ -85,8 +85,9 @@ class JournalService(
         val eksisterendeAnnetDokumentMedSak = navRinasakClient.finnNavRinasakOrNull(rinasakId)!!
             .dokumenter!!
             .mapNotNull { safClient.firstTilknyttetJournalpostOrNull(it.dokumentInfoId!!) }
-            .first { it.sak != null }
-        oppdater(eksisterendeAnnetDokumentMedSak)
+            .firstOrNull { it.sak != null }
+        if (eksisterendeAnnetDokumentMedSak != null)
+            oppdater(eksisterendeAnnetDokumentMedSak)
         ferdigstill(journalpostId)
         log.info { "Ferdigstilte journalpostId=$journalpostId" }
     }

@@ -45,6 +45,10 @@ class JournalpostPreprosseseringService(
     fun oppdatering(journalpostId: String, bruker: SafBruker) =
         when (journalpostId) {
             "476493871" -> dokarkivJournalpostOppdatering("FOR", bruker)
+            "547921930" -> dokarkivJournalpostOppdatering("BAR", bruker)
+            "544655205" -> dokarkivJournalpostOppdatering("BAR", bruker)
+            "460019330" -> dokarkivJournalpostOppdatering("BAR", bruker)
+            "479159571" -> dokarkivJournalpostOppdatering("BAR", bruker)
             else -> null
         }
 

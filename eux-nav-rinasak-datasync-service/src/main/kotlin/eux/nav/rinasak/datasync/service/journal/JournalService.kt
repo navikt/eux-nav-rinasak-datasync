@@ -72,16 +72,7 @@ class JournalService(
             ?.firstOrNull()
         if (eksisterendeNavRinasakDokument == null)
             log.info { "Ferdigstiller uten eksisterende dokument" }
-        euxRinaApiClient
-            .euxRinaSakOversikt(rinasakId)
-            .sedListe
-            .forEach {
-                it.leggTilSedINavRinasak(
-                    eksisterendeDokumenter = navRinasak.dokumenter ?: emptyList(),
-                    journalpost = this,
-                    rinasakId = rinasakId
-                )
-            }
+        tryLeggTilSedINavRinasak(rinasakId, navRinasak.dokumenter, this)
         val eksisterendeAnnetDokumentMedSak = navRinasakClient.finnNavRinasakOrNull(rinasakId)!!
             .dokumenter!!
             .mapNotNull { safClient.firstTilknyttetJournalpostOrNull(it.dokumentInfoId!!) }
@@ -90,6 +81,25 @@ class JournalService(
             oppdater(eksisterendeAnnetDokumentMedSak)
         ferdigstill(journalpostId)
         log.info { "Ferdigstilte journalpostId=$journalpostId" }
+    }
+
+    fun tryLeggTilSedINavRinasak(
+        rinasakId: Int,
+        dokumenter: List<DokumentType>?,
+        journalpost: SafJournalpost
+    ) = try {
+        euxRinaApiClient
+            .euxRinaSakOversikt(rinasakId)
+            .sedListe
+            .forEach {
+                it.leggTilSedINavRinasak(
+                    eksisterendeDokumenter = dokumenter ?: emptyList(),
+                    journalpost = journalpost,
+                    rinasakId = rinasakId
+                )
+            }
+    } catch (e: RuntimeException) {
+        log.error(e) { "kunne ikke hente sak fra rina" }
     }
 
     fun EuxSedOversiktV3.leggTilSedINavRinasak(
@@ -105,7 +115,7 @@ class JournalService(
             .filter { UUID.fromString(it.sedId) == sedIdFraEksternReferanseIdUuid }
             .firstOrNull { it.sedVersjon == sedVersjonFraEksternReferanseId }
         if (eksisterendeDokument != null) {
-            log.info { "Dokument eksisterer allerede for journalpostId=${journalpost.journalpostId}" }
+            log.info { "Dokument eksisterer allerede for sedId: $sedId" }
         } else {
             val dokument = DokumentCreateType(
                 sedId = sedIdFraEksternReferanseIdUuid.toString(),

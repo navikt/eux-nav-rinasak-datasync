@@ -2,6 +2,7 @@ package eux.nav.rinasak.datasync.integration.dokarkiv.client
 
 import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivJournalpostOppdatering
 import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivJournalpostOppdateringRespons
+import eux.nav.rinasak.datasync.integration.dokarkiv.model.DokarkivJournalpostSakOppdatering
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
@@ -23,6 +24,18 @@ class DokarkivClient(
         dokarkivJournalpostOppdatering: DokarkivJournalpostOppdatering
     ) {
         val request: RequestEntity<DokarkivJournalpostOppdatering> = RequestEntity
+            .put(URI("$uri/$journalpostId"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+            .body(dokarkivJournalpostOppdatering)
+        dokarkivRestTemplate.exchange(request, DokarkivJournalpostOppdateringRespons::class.java)
+    }
+
+    fun oppdater(
+        journalpostId: String,
+        dokarkivJournalpostOppdatering: DokarkivJournalpostSakOppdatering
+    ) {
+        val request: RequestEntity<DokarkivJournalpostSakOppdatering> = RequestEntity
             .put(URI("$uri/$journalpostId"))
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)

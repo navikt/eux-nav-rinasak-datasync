@@ -28,13 +28,15 @@ class JournalService(
     val navRinasakClient: NavRinasakClient,
     val navRinasakDokumentClient: NavRinasakDokumentClient,
     val journalClient: JournalClient,
-    val dokarkivClient: DokarkivClient
+    val dokarkivClient: DokarkivClient,
+    val journalpostPreprosseseringService: JournalpostPreprosseseringService
 ) {
 
     val log = logger {}
 
     fun journal(journalposter: List<String>) {
         log.info { "Journalfører ${journalposter.size} journalposter..." }
+        journalpostPreprosseseringService.settSak(journalposter)
         journalposter
             .mapNotNull { safJournalpost(it) }
             .forEach { it.tryJournal() }
@@ -181,17 +183,18 @@ class JournalService(
         log.info { "Journalpost oppdatert" }
     }
 
-    fun dokarkivSakOppdateringGenerell() =
-        DokarkivSakOppdatering(
-            sakstype = "GENERELL_SAK",
-            fagsaksystem = null,
-            fagsakId = null
-        )
-
-    fun SafSak.dokarkivSakOppdateringFagsak() =
-        DokarkivSakOppdatering(
-            sakstype = sakstype!!,
-            fagsaksystem = fagsaksystem,
-            fagsakId = fagsakId
-        )
 }
+
+fun dokarkivSakOppdateringGenerell() =
+    DokarkivSakOppdatering(
+        sakstype = "GENERELL_SAK",
+        fagsaksystem = null,
+        fagsakId = null
+    )
+
+fun SafSak.dokarkivSakOppdateringFagsak() =
+    DokarkivSakOppdatering(
+        sakstype = sakstype!!,
+        fagsaksystem = fagsaksystem,
+        fagsakId = fagsakId
+    )

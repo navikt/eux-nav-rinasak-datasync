@@ -5,3 +5,8 @@ data class DokarkivJournalpostOppdatering(
     val bruker: DokarkivBruker,
     val sak: DokarkivSakOppdatering
 )
+
+data class DokarkivJournalpostSakOppdatering(
+    val tema: String,
+    val sak: DokarkivSakOppdatering
+)

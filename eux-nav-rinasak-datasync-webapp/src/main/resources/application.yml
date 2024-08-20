@@ -37,6 +37,7 @@ spring:
   main:
     banner-mode: "off"
 
+# noinspection SpringBootApplicationYaml
 no.nav.security.jwt:
   issuer:
     azuread:

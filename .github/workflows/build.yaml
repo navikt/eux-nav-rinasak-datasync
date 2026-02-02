@@ -5,6 +5,8 @@ permissions:
   deployments: write
   packages: write
   contents: write
+  actions: write
+  id-token: write
 
 on:
   push:
